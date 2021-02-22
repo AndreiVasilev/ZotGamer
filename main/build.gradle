@@ -1,0 +1,74 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
+plugins {
+    id 'application'
+    id 'java'
+}
+
+group 'edu.uci'
+version '1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    modularity.inferModulePath = true
+}
+
+ext {
+    moduleName = 'edu.uci.main'
+}
+
+application {
+    getMainClass().set("$moduleName/Main")
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    def platform = getOperatingSystem()
+    implementation "org.openjfx:javafx-base:13.0.1:${platform}"
+    implementation "org.openjfx:javafx-controls:13.0.1:${platform}"
+    implementation "org.openjfx:javafx-graphics:13.0.1:${platform}"
+    implementation "org.openjfx:javafx-fxml:13.0.1:${platform}"
+    implementation 'edu.uci:bejeweled:+'
+    implementation 'edu.uci:puzzlebobble:+'
+}
+
+tasks.compileJava {
+    options.javaModuleVersion.set(project.version.toString())
+    inputs.property('moduleName', moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes(
+                'Main-Class': "$moduleName/Main",
+        )
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+}
+
+static def getOperatingSystem() {
+    def currentOS = DefaultNativePlatform.currentOperatingSystem;
+    if (currentOS.isWindows()) {
+        return 'win'
+    } else if (currentOS.isLinux()) {
+        return 'linux'
+    }
+    return 'mac'
+}

@@ -23,4 +23,14 @@ public class PuzzleBobble implements Game {
   public void quit() {
 
   }
+
+  @Override
+  public String getName() {
+    return "";
+  }
+
+  @Override
+  public double getScore() {
+    return 0;
+  }
 }

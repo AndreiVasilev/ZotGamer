@@ -5,4 +5,6 @@ public interface Game {
   void pause();
   void resume();
   void quit();
+  String getName();
+  double getScore();
 }

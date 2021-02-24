@@ -28,10 +28,10 @@ repositories {
 
 dependencies {
     def platform = getOperatingSystem()
-    implementation "org.openjfx:javafx-base:13.0.1:${platform}"
-    implementation "org.openjfx:javafx-controls:13.0.1:${platform}"
-    implementation "org.openjfx:javafx-graphics:13.0.1:${platform}"
-    implementation "org.openjfx:javafx-fxml:13.0.1:${platform}"
+    implementation "org.openjfx:javafx-base:15.0.1:${platform}"
+    implementation "org.openjfx:javafx-controls:15.0.1:${platform}"
+    implementation "org.openjfx:javafx-graphics:15.0.1:${platform}"
+    implementation "org.openjfx:javafx-fxml:15.0.1:${platform}"
     implementation 'edu.uci:bejeweled:+'
     implementation 'edu.uci:puzzlebobble:+'
 }

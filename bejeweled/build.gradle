@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'java'
 }
@@ -11,10 +13,41 @@ java {
     modularity.inferModulePath = true
 }
 
+ext {
+    moduleName = 'edu.uci.bejeweled'
+}
+
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    def platform = getOperatingSystem()
+    implementation "org.openjfx:javafx-base:15.0.1:${platform}"
+    implementation "org.openjfx:javafx-controls:15.0.1:${platform}"
+    implementation "org.openjfx:javafx-graphics:15.0.1:${platform}"
+    implementation "org.openjfx:javafx-fxml:15.0.1:${platform}"
     implementation 'edu.uci:tmge:+'
+}
+
+tasks.compileJava {
+    options.javaModuleVersion.set(project.version.toString())
+    inputs.property('moduleName', moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+
+static def getOperatingSystem() {
+    def currentOS = DefaultNativePlatform.currentOperatingSystem;
+    if (currentOS.isWindows()) {
+        return 'win'
+    } else if (currentOS.isLinux()) {
+        return 'linux'
+    }
+    return 'mac'
 }

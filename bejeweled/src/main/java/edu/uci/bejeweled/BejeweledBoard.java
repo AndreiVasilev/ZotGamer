@@ -8,7 +8,7 @@ import java.util.List;
 
 public class BejeweledBoard extends Board {
     private Tile selectTile;
-    // there are 4 types of tiles
+    // there are 8 types of tiles
 
     // 0: blank
     private List<Tile> matches;
@@ -21,6 +21,7 @@ public class BejeweledBoard extends Board {
 
     }
 
+    @Override
     public void initialize() {
         for (int i = 0; i < width; i++) {
             tiles.add(new ArrayList<>());
@@ -29,17 +30,25 @@ public class BejeweledBoard extends Board {
             }
         }
 
-        setupBaord();
+        setupBoard();
     }
 
+    @Override
     public boolean hasMatches() {
         return false;
     }
 
+    @Override
     public void removeMatches() {
-
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                
+            }
+            
+        }
     }
 
+    @Override
     public boolean isGameOver() {
         return false;
     }
@@ -56,7 +65,7 @@ public class BejeweledBoard extends Board {
         return new ArrayList<ArrayList<Tile>>();
     }
 
-    private void setupBaord() {
+    private void setupBoard() {
         boolean done = false;
 
         while (!done) {

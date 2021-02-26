@@ -35,6 +35,43 @@ public class BejeweledBoard extends Board {
 
     @Override
     public boolean hasMatches() {
+        // horizontal matches
+        for (int i = 0; i < width; i++) {
+            int matchLen = 0;
+            int prevType = 0;
+            for (int j = 0; j < height; j++) {
+                if (tiles.get(i).get(j).getType()!=prevType) {
+                    prevType = tiles.get(i).get(j).getType();
+                    matchLen = 0;
+                }
+                else {
+                    matchLen++;
+                    if (matchLen >= 3) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // vertical matches
+        for (int i = 0; i < width; i++) {
+            int matchLen = 0;
+            int prevType = 0;
+            for (int j = 0; j < height; j++) {
+                if (tiles.get(j).get(i).getType()!=prevType) {
+                    prevType = tiles.get(j).get(i).getType();
+                    matchLen = 0;
+                }
+
+                else {
+                    matchLen++;
+                    if (matchLen >=  3) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
@@ -54,10 +91,52 @@ public class BejeweledBoard extends Board {
     }
 
     public boolean hasValidMoves() {
-        return  false;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                selectTile = tiles.get(i).get(j);
+                swapWithSelected(tiles.get(i+1).get(j));
+                if (hasMatches()){
+                    selectTile = tiles.get(i).get(j);
+                    swapWithSelected(tiles.get(i+1).get(j)); // swap back
+                    return true;
+                }
+
+                selectTile = tiles.get(i).get(j);
+                swapWithSelected(tiles.get(i).get(j+1));
+                if (hasMatches()){
+                    selectTile = tiles.get(i).get(j);
+                    swapWithSelected(tiles.get(i).get(j+1)); // swap back
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
     }
 
-    public void swapWithSelected(Tile tile) {
+    public void swapWithSelected(Tile swapTile) {
+        if ((swapTile.getX() == width) || (swapTile.getY() == height)) {
+            return;
+        }
+
+        // save both tile coordinates
+        int currX = selectTile.getX();
+        int currY = selectTile.getY();
+        int swapX = swapTile.getX();
+        int swapY = swapTile.getY();
+
+        // set initially selected tile coords to be swap tile coords
+        selectTile.setX(swapX);
+        selectTile.setY(swapY);
+
+        // set swap tile coords to be initially selected tile coords
+        swapTile.setX(currX);
+        swapTile.setY(currY);
+
+        // swap tile locations on the board
+        tiles.get(currX).set(currY, swapTile);
+        tiles.get(swapX).set(swapY, selectTile);
 
     }
 
@@ -74,16 +153,16 @@ public class BejeweledBoard extends Board {
                     tiles.get(i).get(j).setType( (int)(Math.random()*7) + 1);
                 }
             }
+            // remove matches
+            removeMatches();
+
+
+            // check if there are valid moves
+            if (hasValidMoves()) {
+                done = true;
+            }
         }
 
-        // remove matches
-        removeMatches();
-
-
-        // check if there are valid moves
-        if (hasValidMoves()) {
-            done = true;
-        }
     }
 
 }

@@ -15,11 +15,11 @@ public abstract class Board {
     score = 0;
   }
 
-  abstract void initialize();
+  public abstract void initialize();
 
-  abstract boolean hasMatches();
+  public abstract boolean hasMatches();
 
-  abstract void removeMatches();
+  public abstract void removeMatches();
 
-  abstract boolean isGameOver();
+  public abstract boolean isGameOver();
 }

@@ -3,11 +3,14 @@ package edu.uci.tmge;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiplayerGame implements Game{
+public class MultiplayerGame implements Game {
+
     private final List<Game> games;
+    private int currentPlayer;
 
     public MultiplayerGame(){
         this.games = new ArrayList<>();
+        currentPlayer = 0;
     }
 
     public void addGame(Game game){
@@ -45,7 +48,9 @@ public class MultiplayerGame implements Game{
     }
 
     public void switchPlayers(){
-
+        games.get(currentPlayer).pause();
+        currentPlayer = (currentPlayer + 1) % games.size();
+        games.get(currentPlayer).resume();
     }
 
 }

@@ -1,6 +1,7 @@
 package edu.uci.bejeweled;
 
 
+import edu.uci.tmge.Pausable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -11,7 +12,7 @@ import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
 
-public class BejeweledViewController extends HBox {
+public class BejeweledViewController extends HBox implements Pausable {
 
   @FXML private GridPane tileGrid;
   @FXML private Label playerLabel;
@@ -43,4 +44,13 @@ public class BejeweledViewController extends HBox {
     }
   }
 
+  @Override
+  public void pause() {
+    setDisable(true);
+  }
+
+  @Override
+  public void resume() {
+    setDisable(false);
+  }
 }

@@ -2,33 +2,46 @@ package edu.uci.puzzlebobble;
 
 import edu.uci.tmge.Tile;
 
-public class PuzzleBobbleTile extends Tile {
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
-    private static final double speed = 1.0;
-    private double angle;
+public class PuzzleBobbleTile extends Circle {
 
-    PuzzleBobbleTile(int x, int y, int type){
-        super(x, y, type);
-        // int 0 blue
-        // int 1 red
-        // int 2 yellow
-        // int 3 teal,
-        // int 4 pink,
-        // int 5 green,
-        // int 6 white
+    private static final Color[] COLORS = {
+        Color.BLUE,
+        Color.RED,
+        Color.YELLOW,
+        Color.TEAL,
+        Color.PINK,
+        Color.GREEN,
+        Color.LIGHTGREY
+    };
+
+    private final Tile tile;
+
+    PuzzleBobbleTile(int type) {
+        tile = new Tile(0.0, 0.0, type);
+        setFill(COLORS[type]);
+        setStroke(Color.valueOf("#464646"));
+        setStrokeWidth(1.0);
+        setRadius(20.0);
     }
 
-    public double getAngle() {
-        return this.angle;
+    public double getX() {
+        return tile.getX();
     }
 
-    public void setAngle(double angle) {
-        this.angle = angle;
+    public void setX(double x) {
+        setLayoutX(x);
+        tile.setX(x);
     }
 
-    public static double getSpeed() {
-        return speed;
+    public double getY() {
+        return tile.getY();
     }
 
-    // no setSpeed bc its final
+    public void setY(double y) {
+        setLayoutY(y);
+        tile.setY(y);
+    }
 }

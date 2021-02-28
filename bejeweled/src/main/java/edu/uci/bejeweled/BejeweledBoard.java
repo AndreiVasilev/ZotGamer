@@ -260,10 +260,10 @@ public class BejeweledBoard extends Board {
         }
 
         // save both tile coordinates
-        int currX = selectTile.getX();
-        int currY = selectTile.getY();
-        int swapX = swapTile.getX();
-        int swapY = swapTile.getY();
+        int currX = (int) selectTile.getX();
+        int currY = (int) selectTile.getY();
+        int swapX = (int) swapTile.getX();
+        int swapY = (int) swapTile.getY();
 
         // set initially selected tile coords to be swap tile coords
         selectTile.setX(swapX);

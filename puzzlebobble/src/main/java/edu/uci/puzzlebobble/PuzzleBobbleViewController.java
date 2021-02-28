@@ -1,28 +1,30 @@
 package edu.uci.puzzlebobble;
 
-import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import java.io.IOException;
 
 public class PuzzleBobbleViewController extends StackPane {
 
-    @FXML private Circle nextTile;
-    @FXML private Circle currentTile;
     @FXML private Line shooterLine;
+    @FXML private Pane tilePane;
     @FXML private Label score;
+    private static final double SHOOTER_LINE_LENGTH = 57.0;
+    private static final double SHOOT_TILE_START_X = 395.0;
+    private static final double SHOOT_TILE_START_Y = 566.0;
     private static final double MAX_ANGLE = -0.26179;
     private static final double MIN_ANGLE = -2.87979;
-    private static final double SHOOT_VELOCITY = 15.0;
-    private final double SHOOTER_LINE_LENGTH;
-    private final double TILE_START_X;
-    private final double TILE_START_Y;
+    private static final double NEXT_TILE_X = 164.0;
+    private static final double NEXT_TILE_Y = 567.0;
+    private PuzzleBobbleTile currentTile;
+    private PuzzleBobbleTile nextTile;
     private double shooterAngle;
+    private boolean isShooting;
 
     public PuzzleBobbleViewController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/PuzzleBobbleView.fxml"));
@@ -35,10 +37,20 @@ public class PuzzleBobbleViewController extends StackPane {
         }
 
         registerMouseListeners();
-        TILE_START_X = currentTile.getLayoutX();
-        TILE_START_Y = currentTile.getLayoutY();
-        SHOOTER_LINE_LENGTH = Math.sqrt(Math.pow(shooterLine.getStartX() - shooterLine.getEndX(), 2.0) +
-                                        Math.pow(shooterLine.getStartY() - shooterLine.getEndY(), 2.0));
+
+        // TODO probably get from board? createTile()?
+        currentTile = new PuzzleBobbleTile((int) (Math.random() * 7));
+        nextTile = new PuzzleBobbleTile((int) (Math.random() * 7));
+
+        // TODO need to link this with board. After a tile has been shot, matches will be checked, and all
+        //  tiles that have matched must be removed from this node pane so that they no longer appear on screen
+        tilePane.getChildren().addAll(currentTile, nextTile);
+
+        // Position of tiles must be set AFTER they are added to UI canvas
+        currentTile.setX(SHOOT_TILE_START_X);
+        currentTile.setY(SHOOT_TILE_START_Y);
+        nextTile.setX(NEXT_TILE_X);
+        nextTile.setY(NEXT_TILE_Y);
     }
 
     private void registerMouseListeners() {
@@ -48,47 +60,26 @@ public class PuzzleBobbleViewController extends StackPane {
         });
 
         setOnMouseClicked(event -> {
-
-            final AnimationTimer shootingAnimation = new AnimationTimer() {
-
-                private double angle = shooterAngle;
-                private double deltaX = getDeltaX();
-                private double deltaY = getDeltaY();
-
-                @Override
-                public void handle(long now) {
-                    currentTile.setLayoutX(currentTile.getLayoutX() + deltaX);
-                    currentTile.setLayoutY(currentTile.getLayoutY() + deltaY);
-
-                    // TODO use board dimensions
-                    if (currentTile.getLayoutX() - currentTile.getRadius() <= 0.0 ||
-                        currentTile.getLayoutX() + currentTile.getRadius() >= 789.0)
-                    {
-                        angle = -(angle + Math.PI);
-                        deltaX = getDeltaX();
-                        deltaY = getDeltaY();
-                        System.out.println(angle);
-                    }
-
-                    // TODO check for collisions with other tiles, not just top of board
-                    if (currentTile.getLayoutY() - currentTile.getRadius() <= 0.0) {
-                        currentTile.setLayoutX(TILE_START_X);
-                        currentTile.setLayoutY(TILE_START_Y);
-                        stop();
-                    }
-                }
-
-                private double getDeltaX() {
-                    return Math.cos(angle) * SHOOT_VELOCITY;
-                }
-
-                private double getDeltaY() {
-                    return Math.sin(angle) * SHOOT_VELOCITY;
-                }
-            };
-
-            shootingAnimation.start();
+            if (!isShooting) {
+                final TileShootingAnimation shootingAnimation = new TileShootingAnimation(currentTile, shooterAngle);
+                shootingAnimation.start();
+                shootingAnimation.stoppedProperty().addListener((observable, oldValue, newValue) -> {
+                    isShooting = false;
+                    swapTiles();
+                });
+                isShooting = true;
+            }
         });
+    }
+
+    private void swapTiles() {
+        currentTile = nextTile;
+        currentTile.setX(SHOOT_TILE_START_X);
+        currentTile.setY(SHOOT_TILE_START_Y);
+        nextTile = new PuzzleBobbleTile((int) (Math.random() * 7));
+        tilePane.getChildren().add(nextTile);
+        nextTile.setX(NEXT_TILE_X);
+        nextTile.setY(NEXT_TILE_Y);
     }
 
     private void updateShooterAngle(final double mouseX, final double mouseY) {

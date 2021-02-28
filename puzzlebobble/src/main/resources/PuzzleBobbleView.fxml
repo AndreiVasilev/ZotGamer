@@ -32,16 +32,14 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Circle fx:id="nextTile" fill="DODGERBLUE" layoutX="158.0" layoutY="65.0" radius="20.0" stroke="#4a4a4a" strokeType="INSIDE" />
                   <Circle fill="#b5b5b5" layoutX="395.0" layoutY="65.0" radius="43.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" />
                </children>
             </AnchorPane>
          </children>
       </VBox>
-      <Pane>
+      <Pane fx:id="tilePane">
          <children>
             <Line fx:id="shooterLine" endX="394.0" endY="507.0" layoutX="1.0" layoutY="1.0" startX="394.0" startY="564.0" stroke="WHITE" strokeWidth="3.0" />
-            <Circle fx:id="currentTile" fill="DODGERBLUE" layoutX="395.0" layoutY="566.0" radius="20.0" stroke="#4a4a4a" strokeType="INSIDE" />
          </children>
       </Pane>
    </children>

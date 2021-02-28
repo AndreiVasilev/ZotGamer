@@ -231,8 +231,8 @@ public class BejeweledBoard extends Board {
 
     //find moves
     public boolean hasValidMoves() {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width-1; i++) {
+            for (int j = 0; j < height-1; j++) {
                 selectTile = tiles.get(i).get(j);
                 swapWithSelected(tiles.get(i+1).get(j));
                 if (hasMatches()){

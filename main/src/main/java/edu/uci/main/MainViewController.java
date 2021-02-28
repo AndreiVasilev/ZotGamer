@@ -1,5 +1,6 @@
 package edu.uci.main;
 
+import edu.uci.bejeweled.BejeweledBoard;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 

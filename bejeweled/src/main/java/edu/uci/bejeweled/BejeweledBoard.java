@@ -16,16 +16,11 @@ public class BejeweledBoard extends Board {
     private List<Dictionary<String, Integer>> matches;
     private List<Tile> selectedTiles; // first tile is first selected, second is second selected
 
-    public void test(){
-        BejeweledBoard test = new BejeweledBoard();
-        test.initialize();
-        test.printBoard();
-    }
-
     public BejeweledBoard(){
         super();
         this.width = 8;
         this.height = 8;
+        this.matches = new ArrayList<>();
     }
 
     @Override
@@ -44,15 +39,21 @@ public class BejeweledBoard extends Board {
         this.matches.clear();
         int totalMatches = 0;
         //horizontal
-        for(int i = 0; i<width; i++) {
+        for(int i = 0; i<height; i++) {
             int matchLen = 1;
-            boolean noMoreMatch = false;
-            for(int j = 0; j<height; i++){
-                if(tiles.get(i).get(j).getType() == tiles.get(i).get(j+1).getType()){
-                    ++matchLen;
+
+            for(int j = 0; j<width; j++){
+                boolean noMoreMatch = false;
+                if(j == this.width - 1) {
+                    noMoreMatch = true;
                 }
                 else {
-                    noMoreMatch = true;
+                    if(tiles.get(i).get(j).getType() == tiles.get(i).get(j+1).getType()){
+                        ++matchLen;
+                    }
+                    else {
+                        noMoreMatch = true;
+                    }
                 }
 
                 if(noMoreMatch) {
@@ -61,30 +62,41 @@ public class BejeweledBoard extends Board {
                         this.matches.get(totalMatches).put("row", i);
                         this.matches.get(totalMatches).put("col", j+1-matchLen);
                         this.matches.get(totalMatches).put("hor", 1);
+                        this.matches.get(totalMatches).put("length", matchLen);
+                        totalMatches++;
                     }
-                    matchLen =0;
+                    matchLen =1;
                 }
             }
         }
-
+        //vertical
         for(int i = 0; i<width; i++) {
             int matchLen = 1;
-            boolean noMoreMatch = false;
-            for(int j = 0; j<height; i++) {
-                if(tiles.get(j).get(i).getType() == tiles.get(j+1).get(i).getType()){
-                    ++matchLen;
+
+            for(int j = 0; j<height; j++) {
+                boolean noMoreMatch = false;
+                if(j == this.height-1) {
+                    noMoreMatch = true;
                 }
                 else {
-                    noMoreMatch = true;
+                    if(tiles.get(j).get(i).getType() == tiles.get(j+1).get(i).getType()){
+                        ++matchLen;
+
+                    }
+                    else {
+                        noMoreMatch = true;
+                    }
                 }
                 if(noMoreMatch) {
                     if(matchLen >= 3) {
                         this.matches.add(new Hashtable<String, Integer>());
-                        this.matches.get(totalMatches).put("row", i+1-matchLen);
-                        this.matches.get(totalMatches).put("col", j);
+                        this.matches.get(totalMatches).put("col", i);
+                        this.matches.get(totalMatches).put("row", j+1-matchLen);
                         this.matches.get(totalMatches).put("hor", 0);
+                        this.matches.get(totalMatches).put("length", matchLen);
+                        totalMatches++;
                     }
-                    matchLen =0;
+                    matchLen =1;
                 }
 
             }
@@ -93,7 +105,6 @@ public class BejeweledBoard extends Board {
 
     }
 
-    //findclusters
     @Override
     public boolean hasMatches() {
         // horizontal matches
@@ -139,11 +150,16 @@ public class BejeweledBoard extends Board {
     //TODO: finish removeMatches
     @Override
     public void removeMatches() {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                
-            }
-            
+        this.findMatches();
+
+        while(this.matches.size()>0) {
+            this.removeTiles();
+
+            this.shiftTiles();
+
+            this.fillEmptyTiles();
+
+            this.findMatches();
         }
     }
 
@@ -172,8 +188,18 @@ public class BejeweledBoard extends Board {
         return false;
     }
 
-    //TODO: Finish vertical shift
-//What happens when you get a T shape match
+    public void fillEmptyTiles() {
+        for(int i = 0; i<this.width; ++i) {
+            for(int j = 0; j<this.height; ++j) {
+                if(this.tiles.get(i).get(j).getType() == 0) {
+                    this.tiles.get(i).get(j).setType((int)(Math.random()*7) + 1);
+                }
+            }
+        }
+
+    }
+
+
     public void shiftTiles() {
         for(int i = 0; i<this.matches.size();++i) {
             int matchLen = this.matches.get(i).get("length");
@@ -187,19 +213,15 @@ public class BejeweledBoard extends Board {
                         this.tiles.get(r).get(c).setType(0);
                     }
                 }
-                for(int c = col; c<col+matchLen; c++) {
-                    this.tiles.get(0).get(c).setType((int)(Math.random()*7) + 1);
-                }
 
             }
-            //vertical NOT FINISHED
+            //vertical
             else {
                 for(int r = row-1; r>=0; --r) {
-                    for(int k = r; k<matchLen;++k) {
-                        this.tiles.get(k+1).get(col).setType(this.tiles.get(r).get(col).getType());
+                    for(int k = r; k<r+matchLen;++k) {
+                        this.tiles.get(k+1).get(col).setType(this.tiles.get(k).get(col).getType());
                         this.tiles.get(k).get(col).setType(0);
                     }
-                    break;
                 }
             }
 
@@ -229,7 +251,6 @@ public class BejeweledBoard extends Board {
 
             }
         }
-
         return false;
     }
 

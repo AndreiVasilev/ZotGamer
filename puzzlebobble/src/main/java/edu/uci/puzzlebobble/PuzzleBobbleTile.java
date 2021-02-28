@@ -14,7 +14,7 @@ public class PuzzleBobbleTile extends Circle {
         Color.TEAL,
         Color.PINK,
         Color.GREEN,
-        Color.LIGHTGREY
+        Color.WHITE
     };
 
     private final Tile tile;

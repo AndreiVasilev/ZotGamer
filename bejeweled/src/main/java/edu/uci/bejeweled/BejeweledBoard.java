@@ -3,10 +3,8 @@ package edu.uci.bejeweled;
 import edu.uci.tmge.Board;
 import edu.uci.tmge.Tile;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BejeweledBoard extends Board {
     private Tile selectTile;
@@ -17,10 +15,12 @@ public class BejeweledBoard extends Board {
     private List<Tile> selectedTiles; // first tile is first selected, second is second selected
 
     public BejeweledBoard(){
-        super();
-        this.width = 8;
-        this.height = 8;
+        super(8, 8);
         this.matches = new ArrayList<>();
+    }
+
+    public Collection<Tile> getTiles() {
+        return tiles.stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     @Override
@@ -285,7 +285,7 @@ public class BejeweledBoard extends Board {
 
     public void printBoard(){
         for(int i = 0; i<width; ++i){
-            for(int j = 0; j<height; ++i){
+            for(int j = 0; j<height; ++j){
                 System.out.print(tiles.get(i).get(j).getType() + " ");
             }
             System.out.println();

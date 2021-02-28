@@ -1,8 +1,15 @@
 package edu.uci.puzzlebobble;
 
+
 import edu.uci.tmge.Game;
 
 public class PuzzleBobble implements Game {
+
+  private final PuzzleBobbleBoard board;
+
+  public PuzzleBobble() {
+    board = new PuzzleBobbleBoard();
+  }
 
   @Override
   public void launch() {
@@ -25,8 +32,13 @@ public class PuzzleBobble implements Game {
   }
 
   @Override
+  public PuzzleBobbleBoard getBoard() {
+    return board;
+  }
+
+  @Override
   public String getName() {
-    return "";
+    return "Puzzle Bobble";
   }
 
   @Override

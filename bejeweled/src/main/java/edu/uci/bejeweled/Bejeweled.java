@@ -4,6 +4,12 @@ import edu.uci.tmge.Game;
 
 public class Bejeweled implements Game {
 
+  private final BejeweledBoard board;
+
+  public Bejeweled() {
+    board = new BejeweledBoard();
+  }
+
   @Override
   public void launch() {
 
@@ -22,6 +28,11 @@ public class Bejeweled implements Game {
   @Override
   public void quit() {
 
+  }
+
+  @Override
+  public BejeweledBoard getBoard() {
+    return board;
   }
 
   @Override

@@ -6,6 +6,7 @@ import javafx.scene.shape.Rectangle;
 
 public class BejeweledTile extends Rectangle {
 
+  private static final Color selectedColor = Color.RED;
   private static final Color[] COLORS = {
       Color.WHITE,
       Color.YELLOW,
@@ -13,18 +14,14 @@ public class BejeweledTile extends Rectangle {
       Color.HOTPINK,
       Color.LIGHTGREEN,
       Color.INDIANRED,
-      Color.MEDIUMPURPLE
+      Color.MEDIUMPURPLE,
   };
 
   private final Tile tile;
 
   public BejeweledTile(final Tile tile) {
     this.tile = tile;
-    setFill(COLORS[tile.getType() - 1]);
-    setHeight(65.0);
-    setWidth(65.0);
-    setStroke(Color.BLACK);
-    setStrokeWidth(3.0);
+    initializeStyle();
   }
 
   public double getXPos() {
@@ -43,5 +40,25 @@ public class BejeweledTile extends Rectangle {
   public void setYPos(double y) {
     setY(y);
     tile.setY(y);
+  }
+
+  public void select() {
+    setFill(selectedColor);
+  }
+
+  public void unselect() {
+    setFill(getTileColor());
+  }
+
+  private void initializeStyle() {
+    setFill(getTileColor());
+    setHeight(65.0);
+    setWidth(65.0);
+    setStroke(Color.BLACK);
+    setStrokeWidth(3.0);
+  }
+
+  private Color getTileColor() {
+    return COLORS[tile.getType() - 1];
   }
 }

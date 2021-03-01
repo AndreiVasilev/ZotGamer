@@ -1,10 +1,9 @@
 package edu.uci.main;
 
-import edu.uci.puzzlebobble.PuzzleBobbleViewController;
+import edu.uci.bejeweled.Bejeweled;
+import edu.uci.puzzlebobble.PuzzleBobble;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -22,11 +21,13 @@ public class MainViewController extends AnchorPane {
   }
 
   public void playBejeweled() {
-
+    final Bejeweled bejeweled = new Bejeweled();
+    bejeweled.launch();
   }
 
   public void playPuzzleBobble() {
-
+    final PuzzleBobble puzzleBobble = new PuzzleBobble(1);
+    puzzleBobble.launch();
   }
 
   public void viewPlayerProfiles() {

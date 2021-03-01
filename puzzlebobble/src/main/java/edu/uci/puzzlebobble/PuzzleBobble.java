@@ -7,9 +7,11 @@ import javafx.stage.Stage;
 public class PuzzleBobble implements Game {
 
   private final PuzzleBobbleBoard board;
+  private final int player;
 
-  public PuzzleBobble() {
+  public PuzzleBobble(final int player) {
     board = new PuzzleBobbleBoard();
+    this.player = player;
   }
 
   @Override
@@ -17,7 +19,7 @@ public class PuzzleBobble implements Game {
     final Stage stage = new Stage();
     final Scene mainScene = new Scene(new PuzzleBobbleViewController(board));
     stage.setResizable(false);
-    stage.setTitle("Zot Gamer");
+    stage.setTitle("Puzzle Bobble - Player " + player);
     stage.setScene(mainScene);
     stage.show();
   }

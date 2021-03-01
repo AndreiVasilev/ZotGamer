@@ -23,10 +23,11 @@ public class PuzzleBobbleViewController extends StackPane {
     private static final double NEXT_TILE_Y = 567.0;
     private PuzzleBobbleTile currentTile;
     private PuzzleBobbleTile nextTile;
+    private PuzzleBobbleBoard board;
     private double shooterAngle;
     private boolean isShooting;
 
-    public PuzzleBobbleViewController() {
+    public PuzzleBobbleViewController(final PuzzleBobbleBoard board) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/PuzzleBobbleView.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -36,15 +37,19 @@ public class PuzzleBobbleViewController extends StackPane {
             throw new RuntimeException(exception);
         }
 
+        this.board = board;
         registerMouseListeners();
+        initializeShooter();
+    }
 
+    private void initializeShooter() {
         // TODO probably get from board? createTile()?
         currentTile = new PuzzleBobbleTile((int) (Math.random() * 7));
         nextTile = new PuzzleBobbleTile((int) (Math.random() * 7));
 
         // TODO need to link this with board. After a tile has been shot, matches will be checked, and all
         //  tiles that have matched must be removed from this node pane so that they no longer appear on screen
-        tilePane.getChildren().addAll(currentTile, nextTile);
+        tilePane.getChildren().addAll(currentTile.getVisualTile(), nextTile.getVisualTile());
 
         // Position of tiles must be set AFTER they are added to UI canvas
         currentTile.setX(SHOOT_TILE_START_X);
@@ -80,7 +85,7 @@ public class PuzzleBobbleViewController extends StackPane {
         currentTile.setX(SHOOT_TILE_START_X);
         currentTile.setY(SHOOT_TILE_START_Y);
         nextTile = new PuzzleBobbleTile((int) (Math.random() * 7));
-        tilePane.getChildren().add(nextTile);
+        tilePane.getChildren().add(nextTile.getVisualTile());
         nextTile.setX(NEXT_TILE_X);
         nextTile.setY(NEXT_TILE_Y);
     }

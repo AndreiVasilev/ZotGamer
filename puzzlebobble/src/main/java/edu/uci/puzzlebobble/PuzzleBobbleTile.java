@@ -5,7 +5,7 @@ import edu.uci.tmge.Tile;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class PuzzleBobbleTile extends Circle {
+public class PuzzleBobbleTile extends Tile {
 
     private static final Color[] COLORS = {
         Color.BLUE,
@@ -14,34 +14,41 @@ public class PuzzleBobbleTile extends Circle {
         Color.TEAL,
         Color.PINK,
         Color.GREEN,
-        Color.LIGHTGREY
+        Color.INDIANRED
     };
 
-    private final Tile tile;
+    private final Circle visualTile;
 
-    PuzzleBobbleTile(int type) {
-        tile = new Tile(0.0, 0.0, type);
-        setFill(COLORS[type]);
-        setStroke(Color.valueOf("#464646"));
-        setStrokeWidth(1.0);
-        setRadius(20.0);
+    public PuzzleBobbleTile(final int type) {
+        this(0.0, 0.0, type);
     }
 
-    public double getX() {
-        return tile.getX();
+    public PuzzleBobbleTile(final double x, final double y, final int type) {
+        super(x, y, type);
+        visualTile = new Circle();
+        visualTile.setFill(COLORS[type]);
+        visualTile.setStroke(Color.valueOf("#464646"));
+        visualTile.setStrokeWidth(1.0);
+        visualTile.setRadius(20.0);
     }
 
+    @Override
     public void setX(double x) {
-        setLayoutX(x);
-        tile.setX(x);
+        super.setX(x);
+        visualTile.setLayoutX(x);
     }
 
-    public double getY() {
-        return tile.getY();
-    }
-
+    @Override
     public void setY(double y) {
-        setLayoutY(y);
-        tile.setY(y);
+        super.setY(y);
+        visualTile.setLayoutY(y);
+    }
+
+    public Circle getVisualTile() {
+        return visualTile;
+    }
+
+    public double getRadius() {
+        return visualTile.getRadius();
     }
 }

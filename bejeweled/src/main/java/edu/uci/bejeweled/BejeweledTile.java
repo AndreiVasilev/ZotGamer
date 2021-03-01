@@ -4,10 +4,11 @@ import edu.uci.tmge.Tile;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class BejeweledTile extends Rectangle {
+public class BejeweledTile extends Tile {
 
   private static final Color selectedColor = Color.RED;
   private static final Color[] COLORS = {
+      Color.BLACK,
       Color.WHITE,
       Color.YELLOW,
       Color.AQUA,
@@ -17,48 +18,41 @@ public class BejeweledTile extends Rectangle {
       Color.MEDIUMPURPLE,
   };
 
-  private final Tile tile;
+  private final Rectangle visualTile;
 
-  public BejeweledTile(final Tile tile) {
-    this.tile = tile;
+  public BejeweledTile(final double x, final double y, final int type) {
+    super(x, y, type);
+    this.visualTile = new Rectangle();
     initializeStyle();
   }
 
-  public double getXPos() {
-    return tile.getX();
+  public Rectangle getVisualTile() {
+    return visualTile;
   }
 
-  public void setXPos(double x) {
-    setX(x);
-    tile.setX(x);
-  }
-
-  public double getYPos() {
-    return tile.getY();
-  }
-
-  public void setYPos(double y) {
-    setY(y);
-    tile.setY(y);
+  @Override
+  public void setType(int type) {
+    super.setType(type);
+    setTileColor();
   }
 
   public void select() {
-    setFill(selectedColor);
+    visualTile.setFill(selectedColor);
   }
 
   public void unselect() {
-    setFill(getTileColor());
+    setTileColor();
   }
 
   private void initializeStyle() {
-    setFill(getTileColor());
-    setHeight(65.0);
-    setWidth(65.0);
-    setStroke(Color.BLACK);
-    setStrokeWidth(3.0);
+    setTileColor();
+    visualTile.setHeight(65.0);
+    visualTile.setWidth(65.0);
+    visualTile.setStroke(Color.BLACK);
+    visualTile.setStrokeWidth(3.0);
   }
 
-  private Color getTileColor() {
-    return COLORS[tile.getType() - 1];
+  private void setTileColor() {
+    visualTile.setFill(COLORS[getType()]);
   }
 }

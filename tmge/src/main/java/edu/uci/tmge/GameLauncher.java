@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameLauncher {
-    private final List<GameType> games;
+
+    private final List<String> games;
 
     public GameLauncher(){
         this.games = new ArrayList<>();

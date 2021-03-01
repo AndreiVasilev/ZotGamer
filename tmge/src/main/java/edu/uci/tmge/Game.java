@@ -1,9 +1,7 @@
 package edu.uci.tmge;
 
-public interface Game {
+public interface Game extends Pausable {
   void launch();
-  void pause();
-  void resume();
   void quit();
   String getName();
   double getScore();

@@ -2,10 +2,12 @@ package edu.uci.bejeweled;
 
 
 import edu.uci.tmge.Pausable;
-import edu.uci.tmge.Tile;
+import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -49,10 +51,65 @@ public class BejeweledViewController extends HBox implements Pausable {
       tileGrid.getColumnConstraints().add(col);
     }
 
-    final Collection<Tile> tiles = bejeweledBoard.getTiles();
-    for (final Tile tile : tiles) {
-      final BejeweledTile bejeweledTile = new BejeweledTile(tile);
-      tileGrid.add(bejeweledTile, (int) bejeweledTile.getXPos(), (int) bejeweledTile.getYPos());
+    drawTileGrid();
+  }
+
+  private void drawTileGrid() {
+    tileGrid.getChildren().clear();
+
+    final Collection<BejeweledTile> tiles = bejeweledBoard.getTiles();
+    for (final BejeweledTile tile : tiles) {
+      tile.getVisualTile().setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+          if (bejeweledBoard.getSelectedTile().isPresent()) {
+            final BejeweledTile selected = bejeweledBoard.getSelectedTile().get();
+
+            if (bejeweledBoard.canSwap(selected, tile)) {
+              bejeweledBoard.swapTiles(selected, tile);
+
+              if (!bejeweledBoard.hasMatches()) {
+                bejeweledBoard.swapTiles(selected, tile);
+              }
+
+              final AnimationTimer animationTimer = new AnimationTimer() {
+
+                private int state = 0;
+                private int counter = 0;
+
+                @Override
+                public void handle(long now) {
+                  if(bejeweledBoard.hasMatches()) {
+                    if (counter != 0) {
+                      counter = (counter + 1) % 50;
+                      return;
+                    }
+                    if (state == 0)
+                      bejeweledBoard.removeTiles();
+                    else if (state == 1)
+                      bejeweledBoard.shiftTiles();
+                    else
+                      bejeweledBoard.fillEmptyTiles();
+                    state = (state + 1) % 3;
+                    ++counter;
+                    drawTileGrid();
+                  } else {
+                    stop();
+                    bejeweledBoard.resetSelectedTile();
+                  }
+                }
+              };
+
+              animationTimer.start();
+              return;
+            }
+          }
+
+          bejeweledBoard.resetSelectedTile();
+          bejeweledBoard.selectTile(tile);
+        }
+      });
+      tileGrid.add(tile.getVisualTile(), (int) tile.getX(), (int) tile.getY());
     }
   }
 

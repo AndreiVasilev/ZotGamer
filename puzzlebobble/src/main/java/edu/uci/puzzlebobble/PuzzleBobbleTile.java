@@ -11,10 +11,10 @@ public class PuzzleBobbleTile extends Tile {
         Color.BLUE,
         Color.RED,
         Color.YELLOW,
-        Color.TEAL,
-        Color.PINK,
-        Color.GREEN,
-        Color.INDIANRED
+        Color.MEDIUMPURPLE,
+        Color.HOTPINK,
+        Color.LIMEGREEN,
+        Color.AQUA
     };
 
     private final Circle visualTile;

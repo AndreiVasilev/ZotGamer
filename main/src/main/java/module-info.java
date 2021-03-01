@@ -5,4 +5,5 @@ module edu.uci.main {
   requires javafx.controls;
   requires edu.uci.bejeweled;
   requires edu.uci.puzzlebobble;
+  requires edu.uci.tmge;
 }

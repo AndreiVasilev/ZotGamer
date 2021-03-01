@@ -17,9 +17,7 @@ public class PuzzleBobbleBoard extends Board {
     private List<Tile> selectedTiles;
 
     public PuzzleBobbleBoard(){
-        super();
-        this.width = 8;
-        this.height = 10;
+        super(8, 10);
     }
 
     @Override

@@ -3,7 +3,7 @@ package edu.uci.tmge;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiplayerGame implements Game {
+public class MultiplayerGame {
 
     private final List<Game> games;
     private int currentPlayer;
@@ -17,34 +17,28 @@ public class MultiplayerGame implements Game {
         games.add(game);
     }
 
-    @Override
-    public void launch(){
-
+    public void launch() {
+        for (int i = 0; i < games.size(); ++i) {
+            final Game game = games.get(i);
+            game.launch();
+            if (i != 0) {
+                game.pause();
+            }
+        }
     }
 
-    @Override
-    public void  resume(){
-
+    public void resume(){
+        games.get(currentPlayer).resume();
     }
 
-    @Override
     public void pause(){
-
+        games.get(currentPlayer).pause();
     }
 
-    @Override
     public void quit(){
-
-    }
-
-    @Override
-    public String getName(){
-        return "";
-    }
-
-    @Override
-    public double getScore(){
-        return 0;
+        for (final Game game : games) {
+            game.quit();
+        }
     }
 
     public void switchPlayers(){
@@ -52,5 +46,4 @@ public class MultiplayerGame implements Game {
         currentPlayer = (currentPlayer + 1) % games.size();
         games.get(currentPlayer).resume();
     }
-
 }

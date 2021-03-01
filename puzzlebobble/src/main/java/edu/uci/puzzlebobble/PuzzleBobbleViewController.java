@@ -1,5 +1,6 @@
 package edu.uci.puzzlebobble;
 
+import edu.uci.tmge.Pausable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -9,7 +10,7 @@ import javafx.scene.shape.Line;
 
 import java.io.IOException;
 
-public class PuzzleBobbleViewController extends StackPane {
+public class PuzzleBobbleViewController extends StackPane implements Pausable {
 
     @FXML private Line shooterLine;
     @FXML private Pane tilePane;
@@ -100,5 +101,15 @@ public class PuzzleBobbleViewController extends StackPane {
         final double y = Math.sin(shooterAngle) * SHOOTER_LINE_LENGTH;
         shooterLine.setEndX(shooterLine.getStartX() + x);
         shooterLine.setEndY(shooterLine.getStartY() + y);
+    }
+
+    @Override
+    public void pause() {
+        setDisable(true);
+    }
+
+    @Override
+    public void resume() {
+        setDisable(false);
     }
 }

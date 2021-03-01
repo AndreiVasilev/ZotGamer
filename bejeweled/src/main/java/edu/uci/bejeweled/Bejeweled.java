@@ -1,6 +1,8 @@
 package edu.uci.bejeweled;
 
 import edu.uci.tmge.Game;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class Bejeweled implements Game {
 
@@ -12,7 +14,14 @@ public class Bejeweled implements Game {
 
   @Override
   public void launch() {
+    board.initialize();
 
+    final Stage stage = new Stage();
+    final Scene mainScene = new Scene(new BejeweledViewController(board));
+    stage.setTitle("Bejeweled - Player 1");
+    stage.setScene(mainScene);
+    stage.setResizable(false);
+    stage.show();
   }
 
   @Override
@@ -28,11 +37,6 @@ public class Bejeweled implements Game {
   @Override
   public void quit() {
 
-  }
-
-  @Override
-  public BejeweledBoard getBoard() {
-    return board;
   }
 
   @Override

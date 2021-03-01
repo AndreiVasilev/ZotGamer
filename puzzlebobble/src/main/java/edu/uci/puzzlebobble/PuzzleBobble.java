@@ -32,11 +32,6 @@ public class PuzzleBobble implements Game {
   }
 
   @Override
-  public PuzzleBobbleBoard getBoard() {
-    return board;
-  }
-
-  @Override
   public String getName() {
     return "Puzzle Bobble";
   }

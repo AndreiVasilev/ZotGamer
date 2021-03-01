@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BejeweledBoard extends Board {
-    private Tile selectTile;
+    private Tile selectedTile;
     // there are 8 types of tiles
 
     // 0: blank
@@ -17,10 +17,19 @@ public class BejeweledBoard extends Board {
     public BejeweledBoard(){
         super(8, 8);
         this.matches = new ArrayList<>();
+        selectedTile = null;
     }
 
     public Collection<Tile> getTiles() {
         return tiles.stream().flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    public boolean hasTileSelected() {
+        return selectedTile == null;
+    }
+
+    public void setSelected(final Tile tile) {
+        selectedTile = tile;
     }
 
     @Override
@@ -233,18 +242,18 @@ public class BejeweledBoard extends Board {
     public boolean hasValidMoves() {
         for (int i = 0; i < width-1; i++) {
             for (int j = 0; j < height-1; j++) {
-                selectTile = tiles.get(i).get(j);
+                selectedTile = tiles.get(i).get(j);
                 swapWithSelected(tiles.get(i+1).get(j));
                 if (hasMatches()){
-                    selectTile = tiles.get(i).get(j);
+                    selectedTile = tiles.get(i).get(j);
                     swapWithSelected(tiles.get(i+1).get(j)); // swap back
                     return true;
                 }
 
-                selectTile = tiles.get(i).get(j);
+                selectedTile = tiles.get(i).get(j);
                 swapWithSelected(tiles.get(i).get(j+1));
                 if (hasMatches()){
-                    selectTile = tiles.get(i).get(j);
+                    selectedTile = tiles.get(i).get(j);
                     swapWithSelected(tiles.get(i).get(j+1)); // swap back
                     return true;
                 }
@@ -260,14 +269,14 @@ public class BejeweledBoard extends Board {
         }
 
         // save both tile coordinates
-        int currX = (int) selectTile.getX();
-        int currY = (int) selectTile.getY();
+        int currX = (int) selectedTile.getX();
+        int currY = (int) selectedTile.getY();
         int swapX = (int) swapTile.getX();
         int swapY = (int) swapTile.getY();
 
         // set initially selected tile coords to be swap tile coords
-        selectTile.setX(swapX);
-        selectTile.setY(swapY);
+        selectedTile.setX(swapX);
+        selectedTile.setY(swapY);
 
         // set swap tile coords to be initially selected tile coords
         swapTile.setX(currX);
@@ -275,7 +284,7 @@ public class BejeweledBoard extends Board {
 
         // swap tile locations on the board
         tiles.get(currX).set(currY, swapTile);
-        tiles.get(swapX).set(swapY, selectTile);
+        tiles.get(swapX).set(swapY, selectedTile);
 
     }
 

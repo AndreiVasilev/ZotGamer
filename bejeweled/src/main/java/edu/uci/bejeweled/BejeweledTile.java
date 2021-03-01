@@ -18,9 +18,9 @@ public class BejeweledTile extends Rectangle {
 
   private final Tile tile;
 
-  public BejeweledTile(final int type) {
-    tile = new Tile(0, 0, type);
-    setFill(COLORS[type]);
+  public BejeweledTile(final Tile tile) {
+    this.tile = tile;
+    setFill(COLORS[tile.getType()]);
     setHeight(65.0);
     setWidth(65.0);
   }

@@ -65,6 +65,9 @@ public class PuzzleBobbleViewController extends StackPane {
                 shootingAnimation.start();
                 shootingAnimation.stoppedProperty().addListener((observable, oldValue, newValue) -> {
                     isShooting = false;
+                    // TODO: if( isGameOver() ){ disable screen, show gameover}
+                    // TODO: groups = findGroups()
+                    // TODO: if (groups.size() >= 3) { remove the arraylist of tiles}
                     swapTiles();
                 });
                 isShooting = true;

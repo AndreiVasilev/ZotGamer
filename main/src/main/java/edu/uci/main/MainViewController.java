@@ -26,12 +26,7 @@ public class MainViewController extends AnchorPane {
   }
 
   public void playPuzzleBobble() {
-    final Stage stage = new Stage();
-    final Scene mainScene = new Scene(new PuzzleBobbleViewController());
-    stage.setResizable(false);
-    stage.setTitle("Zot Gamer");
-    stage.setScene(mainScene);
-    stage.show();
+
   }
 
   public void viewPlayerProfiles() {

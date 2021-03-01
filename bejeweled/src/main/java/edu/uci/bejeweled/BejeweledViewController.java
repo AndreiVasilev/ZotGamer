@@ -31,8 +31,8 @@ public class BejeweledViewController extends HBox implements Pausable {
       throw new RuntimeException(exception);
     }
 
-    initializeTileGrid();
     this.bejeweledBoard = bejeweledBoard;
+    initializeTileGrid();
   }
 
   private void initializeTileGrid() {

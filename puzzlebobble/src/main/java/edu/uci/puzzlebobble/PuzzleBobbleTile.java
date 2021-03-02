@@ -18,18 +18,26 @@ public class PuzzleBobbleTile extends Tile {
     };
 
     private final Circle visualTile;
+    public int shift;
 
     public PuzzleBobbleTile(final int type) {
-        this(0.0, 0.0, type);
+        this(0.0, 0.0, type, 0);
     }
 
-    public PuzzleBobbleTile(final double x, final double y, final int type) {
+    public PuzzleBobbleTile(final double x, final double y, final int type, int shift) {
         super(x, y, type);
+        this.shift = shift;
         visualTile = new Circle();
         visualTile.setFill(COLORS[type]);
         visualTile.setStroke(Color.valueOf("#464646"));
         visualTile.setStrokeWidth(1.0);
         visualTile.setRadius(20.0);
+    }
+
+    @Override
+    public void setType(int type) {
+        super.setType(type);
+        //setTileColor();
     }
 
     @Override

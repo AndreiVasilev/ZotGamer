@@ -256,8 +256,8 @@ public class BejeweledBoard extends Board {
     }
 
     public void printBoard(){
-        for(int i = 0; i<width; ++i){
-            for(int j = 0; j<height; ++j){
+        for(int i = 0; i < width; ++i){
+            for(int j = 0; j < height; ++j){
                 System.out.print(tiles.get(i).get(j).getType() + " ");
             }
             System.out.println();

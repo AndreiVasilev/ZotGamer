@@ -48,4 +48,14 @@ public class Bejeweled implements Game {
   public double getScore() {
     return 0;
   }
+
+  @Override
+  public void addEndOfTurnAction(Runnable runnable) {
+
+  }
+
+  @Override
+  public void removeEndOfTurnAction(Runnable runnable) {
+
+  }
 }

@@ -1,17 +1,22 @@
 package edu.uci.puzzlebobble;
 
 import edu.uci.tmge.Pausable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 
 import java.io.IOException;
 
 public class PuzzleBobbleViewController extends StackPane implements Pausable {
 
+    @FXML private AnchorPane pauseScreen;
     @FXML private Line shooterLine;
     @FXML private Pane tilePane;
     @FXML private Label score;
@@ -22,9 +27,10 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
     private static final double MIN_ANGLE = -2.87979;
     private static final double NEXT_TILE_X = 164.0;
     private static final double NEXT_TILE_Y = 567.0;
+    private final PuzzleBobbleBoard board;
+    private final BooleanProperty turnOver;
     private PuzzleBobbleTile currentTile;
     private PuzzleBobbleTile nextTile;
-    private PuzzleBobbleBoard board;
     private double shooterAngle;
     private boolean isShooting;
 
@@ -39,8 +45,13 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
         }
 
         this.board = board;
+        turnOver = new SimpleBooleanProperty(false);
         registerMouseListeners();
         initializeShooter();
+    }
+
+    public BooleanProperty isTurnOver() {
+        return turnOver;
     }
 
     private void initializeShooter() {
@@ -61,12 +72,14 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
 
     private void registerMouseListeners() {
         setOnMouseMoved(event -> {
-            updateShooterAngle(event.getX(), event.getY());
-            event.consume();
+            if (!tilePane.isDisabled()) {
+                updateShooterAngle(event.getX(), event.getY());
+                event.consume();
+            }
         });
 
         setOnMouseClicked(event -> {
-            if (!isShooting) {
+            if (!isShooting && !tilePane.isDisabled()) {
                 final TileShootingAnimation shootingAnimation = new TileShootingAnimation(currentTile, shooterAngle);
                 shootingAnimation.start();
                 shootingAnimation.stoppedProperty().addListener((observable, oldValue, newValue) -> {
@@ -75,6 +88,7 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
                     // TODO: groups = findGroups()
                     // TODO: if (groups.size() >= 3) { remove the arraylist of tiles}
                     swapTiles();
+                    turnOver.set(true);
                 });
                 isShooting = true;
             }
@@ -105,11 +119,14 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
 
     @Override
     public void pause() {
-        setDisable(true);
+        tilePane.setDisable(true);
+        pauseScreen.setVisible(true);
     }
 
     @Override
     public void resume() {
-        setDisable(false);
+        tilePane.setDisable(false);
+        pauseScreen.setVisible(false);
+        turnOver.set(false);
     }
 }

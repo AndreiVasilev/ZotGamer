@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 public class TileShootingAnimation extends AnimationTimer {
 
-  private static final double VELOCITY = 15.0;
+  private static final double VELOCITY = 20.0;
   private final PuzzleBobbleTile tile;
   private final BooleanProperty stopped;
   private double deltaX;

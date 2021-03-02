@@ -2,6 +2,7 @@ package edu.uci.main;
 
 import edu.uci.bejeweled.Bejeweled;
 import edu.uci.puzzlebobble.PuzzleBobble;
+import edu.uci.tmge.MultiplayerGame;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
@@ -26,8 +27,10 @@ public class MainViewController extends AnchorPane {
   }
 
   public void playPuzzleBobble() {
-    final PuzzleBobble puzzleBobble = new PuzzleBobble(1);
-    puzzleBobble.launch();
+    final MultiplayerGame game = new MultiplayerGame();
+    game.addGame(new PuzzleBobble(1));
+    game.addGame(new PuzzleBobble(2));
+    game.launch();
   }
 
   public void viewPlayerProfiles() {

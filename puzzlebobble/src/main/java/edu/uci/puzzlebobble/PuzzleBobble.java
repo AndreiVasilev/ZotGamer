@@ -4,10 +4,14 @@ import edu.uci.tmge.Game;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PuzzleBobble implements Game {
 
   private final PuzzleBobbleViewController viewController;
   private final PuzzleBobbleBoard board;
+  private final List<Runnable> endOfTurnActions;
   private final Stage gameWindow;
   private final int player;
 
@@ -18,6 +22,7 @@ public class PuzzleBobble implements Game {
     gameWindow = new Stage();
     gameWindow.setResizable(false);
     gameWindow.setTitle("Puzzle Bobble - Player " + player);
+    endOfTurnActions = new ArrayList<>();
   }
 
   @Override
@@ -25,6 +30,11 @@ public class PuzzleBobble implements Game {
     final Scene mainScene = new Scene(viewController);
     gameWindow.setScene(mainScene);
     gameWindow.show();
+    viewController.isTurnOver().addListener((observable, oldValue, turnOver) -> {
+      if (turnOver) {
+        endOfTurnActions.forEach(Runnable::run);
+      }
+    });
   }
 
   @Override
@@ -50,5 +60,15 @@ public class PuzzleBobble implements Game {
   @Override
   public double getScore() {
     return board.getScore();
+  }
+
+  @Override
+  public void addEndOfTurnAction(Runnable runnable) {
+    endOfTurnActions.add(runnable);
+  }
+
+  @Override
+  public void removeEndOfTurnAction(Runnable runnable) {
+    endOfTurnActions.remove(runnable);
   }
 }

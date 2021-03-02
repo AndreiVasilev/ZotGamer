@@ -1,4 +1,4 @@
-package edu.uci.tmge;
+package edu.uci.tmge.core;
 
 
 import java.util.HashMap;

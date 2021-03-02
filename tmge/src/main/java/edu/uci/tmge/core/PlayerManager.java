@@ -1,7 +1,5 @@
 package edu.uci.tmge.core;
 
-import edu.uci.tmge.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 

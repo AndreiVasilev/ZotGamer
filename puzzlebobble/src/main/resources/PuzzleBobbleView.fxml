@@ -43,7 +43,7 @@
       </Pane>
       <AnchorPane fx:id="pauseScreen" opacity="0.8" style="-fx-background-color: #222;" visible="false">
          <children>
-            <Label fx:id="gamePauseMessage" alignment="CENTER" text="Game Paused" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label fx:id="gamePauseMessage" alignment="CENTER" text="Other Player's Turn" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="35.0" />
                </font>

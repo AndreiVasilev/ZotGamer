@@ -20,8 +20,9 @@ public class MultiplayerGame {
     public void launch() {
         for (int i = 0; i < games.size(); ++i) {
             final Game game = games.get(i);
+            game.addEndOfTurnAction(this::switchPlayers);
             game.launch();
-            if (i != 0) {
+            if (i != currentPlayer) {
                 game.pause();
             }
         }

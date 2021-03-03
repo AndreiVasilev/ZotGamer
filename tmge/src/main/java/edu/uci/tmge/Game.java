@@ -5,4 +5,6 @@ public interface Game extends Pausable {
   void quit();
   String getName();
   double getScore();
+  void addEndOfTurnAction(Runnable runnable);
+  void removeEndOfTurnAction(Runnable runnable);
 }

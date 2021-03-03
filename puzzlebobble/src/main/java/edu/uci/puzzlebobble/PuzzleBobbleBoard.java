@@ -13,42 +13,44 @@ public class PuzzleBobbleBoard extends Board {
 
     //change to PBtile
     private List<Tile> matches;
-    public int x;
-    public int y;
-    public int radius;
-    public int tileHeight;
-    public int tileWidth;
-    public int windowHeight;
-    public int windowWidth;
-    public int rowHeight;
-    public int rowOffset;
+    private final int tileHeight;
+    private final int tileWidth;
+    private final int rowHeight;
+    private final int rowOffset;
+    private final int boardWidth;
+    private final int boardHeight;
 
 
     public PuzzleBobbleBoard(){
         super(15,14 ); //will be calculated later
-        this.x = 0;
-        this.y = 0;
-        this.radius = 10;
-        this.tileHeight = 20;
-        this.tileWidth = 20;
-        this.rowHeight = 34;
-        this.rowOffset = 0;
+        boardHeight = 620;
+        boardWidth = 620;
+        tileHeight = 40;
+        tileWidth = 40;
+        rowHeight = 34;
+        rowOffset = 0;
         //windowHeight and windowWidth will be calculated in the init
         //tiles does not to be instatiated bc it is called in board? correct? feel free to
         //ping me on disc bc Id like to learn, you can del afterwards- car
     }
 
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
+
     @Override
     public void initialize() {
-        for (int i = 0; i < this.width; i++) {
+        for (int row = 0; row < height; row++) {
             tiles.add(new ArrayList<>());
-            for (int j = 0; j < height; j++) {
-                tiles.get(i).add(new PuzzleBobbleTile(i, j, 0, 0));
+            for (int col = 0; col < width; col++) {
+                tiles.get(row).add(new PuzzleBobbleTile(col, row, 0, 0));
             }
         }
-        this.windowWidth = this.width * this.tileWidth/2;
-        this.windowHeight = (this.height -1) * this.rowHeight + this.tileHeight;
-
+        setupBoard();
     }
 
     @Override
@@ -58,11 +60,10 @@ public class PuzzleBobbleBoard extends Board {
 
     @Override
     public void removeMatches() {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < height; col++) {
 
             }
-
         }
     }
 
@@ -75,8 +76,10 @@ public class PuzzleBobbleBoard extends Board {
         return  false;
     }
 
-    public void swapWithSelected(Tile tile) {
-
+    public Collection<PuzzleBobbleTile> getTiles() {
+        return tiles.stream().flatMap(Collection::stream)
+            .map(tile -> (PuzzleBobbleTile)tile)
+            .collect(Collectors.toList());
     }
 
     // breath first search for neighboring matching tiles
@@ -127,55 +130,51 @@ public class PuzzleBobbleBoard extends Board {
     private void setupBoard() {
         //boolean done = false;
 
-        //while (!done) {
-            for (int i = 0; i < this.width; i++) {
-                int randomTile = (int)(Math.random() * 6) + 1;
-                int count = 0;
-                for (int j = 0; j < this.height; j++) {
-                    if (count >=2){
-                        //change to random tile, we want some variety
-                        int newTile = (int)(Math.random() * 7) + 1;
-                        //if random is STILL the same, force a diff color
-                        if (newTile == randomTile)
-                            newTile = (newTile + 1) % 6; // there are 7 colors, 6 bc zero counts
-                        //forces no more than 2 same color per row
-                        randomTile = newTile;
-                    }
-                    count++;
-                    if (j < this.height/2) // fill half the height
-                        this.tiles.get(i).get(j).setType(randomTile);
-                    else
-                        this.tiles.get(i).get(j).setType(-1);
+        for (int row = 0; row < height; row++) {
+            int randomTile = (int)(Math.random() * 6) + 1;
+            int count = 0;
+            for (int col = 0; col < width; col++) {
+                if (count >=2){
+
+                    int newTile = (int)(Math.random() * 7);
+                    //if random is STILL the same, force a diff color
+                    if (newTile == randomTile)
+                        newTile = (newTile + 1) % 6; // there are 7 colors, 6 bc zero counts
+                    //forces no more than 2 same color per row
+                    randomTile = newTile;
                 }
+                count++;
+
+                if (row < height/2) // fill half the height
+                    tiles.get(row).get(col).setType(randomTile);
+                else
+                    tiles.get(row).get(col).setType(-1);
             }
+        }
     }
 
     public int getXTileCoordinates(int column, int row) {
-        int tileX = this.x + column * this.tileWidth;
-
-        if ((row + this.rowOffset) % 2 == 0)
-            tileX = this.tileWidth / 2;
-
+        int tileX = column * tileWidth;
+        if ((row + rowOffset) % 2 == 0)
+            tileX += tileWidth / 2;
         return tileX;
     }
-    public int getYTileCoordinates(int row) {
-        int tileY = this.y + row * this.rowHeight;
 
-        return tileY;
+    public int getYTileCoordinates(int row) {
+        return row * rowHeight;
     }
 
     public int getXGridPosition(int x){
-        int gridY = (int) Math.floor((y-this.y) / this.rowHeight);
+        int gridY = x / rowHeight;
 
         int xOffset = 0;
         if ((gridY + rowOffset) % 2 == 0)
-            xOffset = this.tileWidth/2;
-        int gridX = (int) Math.floor(((x - xOffset) - this.x) / this.tileWidth);
+            xOffset = tileWidth/2;
 
-        return gridX;
+        return (x - xOffset) / tileWidth;
     }
-    public int getYGridPosition(int x){
-        int gridY = (int) Math.floor((y-this.y) / this.rowHeight);
-        return gridY;
+
+    public int getYGridPosition(int y){
+        return y  / rowHeight;
     }
 }

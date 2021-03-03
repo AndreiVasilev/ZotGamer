@@ -18,6 +18,8 @@ public class PuzzleBobble implements Game {
   public PuzzleBobble(final int player) {
     this.player = player;
     board = new PuzzleBobbleBoard();
+    board.initialize();
+
     viewController = new PuzzleBobbleViewController(board);
     gameWindow = new Stage();
     gameWindow.setResizable(false);

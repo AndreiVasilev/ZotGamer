@@ -43,8 +43,8 @@ public class TileShootingAnimation extends AnimationTimer {
     }
 
     // TODO check for collisions with other tiles, not just top of board
-    if (tile.getVisualY() - tile.getRadius() <= 0.0) {
-      tile.setVisualY(tile.getRadius());
+    if (board.isCollided(tile)) {
+//      tile.setVisualY(tile.getRadius());
       stop();
       stopped.set(true);
     }

@@ -12,6 +12,8 @@ import java.util.LinkedList;
 public class PuzzleBobbleBoard extends Board {
 
     //change to PBtile
+    private static final int X_OFFSET = 20;
+    private static final int Y_OFFSET = 20;
     private List<Tile> matches;
     private final int tileHeight;
     private final int tileWidth;
@@ -153,28 +155,59 @@ public class PuzzleBobbleBoard extends Board {
         }
     }
 
+    public boolean isCollided(final PuzzleBobbleTile shotTile) {
+        final Collection<PuzzleBobbleTile> tiles = getTiles();
+        for (final PuzzleBobbleTile tile : tiles) {
+            if (tile.getType() < 0) {
+                continue;
+            }
+
+            if (intersecting(tile, shotTile)) {
+                snapTile(shotTile);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // TODO check to see not snapping onto non-empty tile
+    public void snapTile(PuzzleBobbleTile shotTile) {
+        int row = getYGridPosition(shotTile.getVisualY());
+        int col = getXGridPosition(shotTile.getVisualX());
+        shotTile.setVisualX(getXTileCoordinates(col, row));
+        shotTile.setVisualY(getYTileCoordinates(row));
+        this.tiles.get(row).set(col, shotTile);
+    }
+
     public int getXTileCoordinates(int column, int row) {
         int tileX = column * tileWidth;
         if ((row + rowOffset) % 2 == 0)
             tileX += tileWidth / 2;
-        return tileX;
+        return X_OFFSET + tileX;
     }
 
     public int getYTileCoordinates(int row) {
-        return row * rowHeight;
+        return Y_OFFSET + row * rowHeight;
     }
 
-    public int getXGridPosition(int x){
-        int gridY = x / rowHeight;
+    public int getXGridPosition(double x){
+        int gridY = (int) (x / rowHeight);
 
         int xOffset = 0;
         if ((gridY + rowOffset) % 2 == 0)
             xOffset = tileWidth/2;
 
-        return (x - xOffset) / tileWidth;
+        return (int) ((x - xOffset) / tileWidth);
     }
 
-    public int getYGridPosition(int y){
-        return y  / rowHeight;
+    public int getYGridPosition(double y){
+        return (int) (y  / rowHeight);
+    }
+
+    public boolean intersecting(final PuzzleBobbleTile tile1, final PuzzleBobbleTile tile2) {
+        final double dx = tile1.getVisualX() - tile2.getVisualX();
+        final double dy = tile1.getVisualY() - tile2.getVisualY();
+        final double dist = Math.sqrt(dx * dx + dy * dy);
+        return dist < tile1.getRadius() * 2.0;
     }
 }

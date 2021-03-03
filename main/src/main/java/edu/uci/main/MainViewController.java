@@ -1,11 +1,10 @@
 package edu.uci.main;
 
 import edu.uci.bejeweled.Bejeweled;
-import edu.uci.puzzlebobble.PuzzleBobbleViewController;
+import edu.uci.puzzlebobble.PuzzleBobble;
+import edu.uci.tmge.MultiplayerGame;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -22,20 +21,18 @@ public class MainViewController extends AnchorPane {
     }
   }
 
-  // TODO replace with Game Launcher
   public void playBejeweled() {
-    final Bejeweled bejeweled = new Bejeweled();
-    bejeweled.launch();
+    final MultiplayerGame game = new MultiplayerGame();
+    game.addGame(new Bejeweled(1));
+    game.addGame(new Bejeweled(2));
+    game.launch();
   }
 
-  // TODO replace with Game Launcher
   public void playPuzzleBobble() {
-    final Stage stage = new Stage();
-    final Scene mainScene = new Scene(new PuzzleBobbleViewController());
-    stage.setTitle("PuzzleBobble - Player 1");
-    stage.setScene(mainScene);
-    stage.setResizable(false);
-    stage.show();
+    final MultiplayerGame game = new MultiplayerGame();
+    game.addGame(new PuzzleBobble(1));
+    game.addGame(new PuzzleBobble(2));
+    game.launch();
   }
 
   public void viewPlayerProfiles() {

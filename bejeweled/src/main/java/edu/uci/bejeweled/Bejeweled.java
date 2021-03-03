@@ -4,34 +4,44 @@ import edu.uci.tmge.Game;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Bejeweled implements Game {
 
+  private final BejeweledViewController viewController;
   private final BejeweledBoard board;
+  private final List<Runnable> endOfTurnActions;
+  private final int player;
 
-  public Bejeweled() {
+  public Bejeweled(final int player) {
+    this.player = player;
     board = new BejeweledBoard();
+    board.initialize();
+    viewController = new BejeweledViewController(board);
+    endOfTurnActions = new ArrayList<>();
   }
 
   @Override
   public void launch() {
-    board.initialize();
-
     final Stage stage = new Stage();
-    final Scene mainScene = new Scene(new BejeweledViewController(board));
-    stage.setTitle("Bejeweled - Player 1");
+    final Scene mainScene = new Scene(viewController);
+    stage.setTitle("Bejeweled - Player " + player);
     stage.setScene(mainScene);
     stage.setResizable(false);
     stage.show();
+    viewController.isTurnOver().addListener((observable, oldValue, newValue) ->
+        endOfTurnActions.forEach(Runnable::run));
   }
 
   @Override
   public void pause() {
-
+    viewController.pause();
   }
 
   @Override
   public void resume() {
-
+    viewController.resume();
   }
 
   @Override
@@ -47,5 +57,15 @@ public class Bejeweled implements Game {
   @Override
   public double getScore() {
     return 0;
+  }
+
+  @Override
+  public void addEndOfTurnAction(Runnable runnable) {
+    endOfTurnActions.add(runnable);
+  }
+
+  @Override
+  public void removeEndOfTurnAction(Runnable runnable) {
+    endOfTurnActions.remove(runnable);
   }
 }

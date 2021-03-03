@@ -8,12 +8,13 @@ import java.util.stream.Collectors;
 
 public class BejeweledBoard extends Board {
 
-    private final List<Map<String, Integer>> matches;
     private BejeweledTile selectedTile;
+
+    //false if board not initialized, true if game has started
+    private boolean gameState =  false;
 
     public BejeweledBoard(){
         super(8, 8);
-        this.matches = new ArrayList<>();
         selectedTile = null;
     }
 
@@ -49,10 +50,11 @@ public class BejeweledBoard extends Board {
         }
 
         setupBoard();
+        this.gameState = true;
     }
 
-    public void findMatches() {
-        this.matches.clear();
+    public List<Map<String, Integer>> findMatches() {
+        List<Map<String, Integer>> matches = new ArrayList<>();
         int totalMatches = 0;
         //horizontal
         for(int row = 0; row < height; row++) {
@@ -116,12 +118,21 @@ public class BejeweledBoard extends Board {
 
             }
         }
+        return matches;
     }
 
     @Override
     public boolean hasMatches() {
-        findMatches();
+        List<Map<String, Integer>> matches = findMatches();
         return !matches.isEmpty();
+    }
+
+    public double calculateScore(List<Map<String, Integer>> matches){
+        double score = 0;
+        for (final Map<String, Integer> match : matches){
+            score += 100*match.get("length")-2;
+        }
+        return score;
     }
 
     //TODO: finish removeMatches
@@ -136,7 +147,11 @@ public class BejeweledBoard extends Board {
 
     //Finds all matches in the board and sets it to 0
     public void removeTiles() {
-        for (final Map<String, Integer> match : this.matches) {
+        List<Map<String, Integer>> matches = findMatches();
+        if(gameState){
+            this.setScore(calculateScore(matches));
+        }
+        for (final Map<String, Integer> match : matches) {
             int matchLen = match.get("length");
             int row = match.get("row");
             int col = match.get("col");
@@ -151,6 +166,7 @@ public class BejeweledBoard extends Board {
             }
         }
     }
+
 
     @Override
     public boolean isGameOver() {
@@ -168,7 +184,8 @@ public class BejeweledBoard extends Board {
     }
 
     public void shiftTiles() {
-        for (final Map<String, Integer> match : this.matches) {
+        List<Map<String, Integer>> matches = findMatches();
+        for (final Map<String, Integer> match : matches) {
             int matchLen = match.get("length");
             int row = match.get("row");
             int col = match.get("col");

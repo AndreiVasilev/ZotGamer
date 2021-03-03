@@ -223,8 +223,8 @@ public class BejeweledBoard extends Board {
     }
 
     public boolean canSwap(final Tile tile1, final Tile tile2) {
-        final int xDiff = (int) Math.abs(tile1.getX() - tile2.getX());
-        final int yDiff = (int) Math.abs(tile1.getY() - tile2.getY());
+        final int xDiff = Math.abs(tile1.getX() - tile2.getX());
+        final int yDiff = Math.abs(tile1.getY() - tile2.getY());
         return (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1);
     }
 
@@ -234,10 +234,10 @@ public class BejeweledBoard extends Board {
         }
 
         // save both tile coordinates
-        int tile1X = (int) tile1.getX();
-        int tile1Y = (int) tile1.getY();
-        int tile2X = (int) tile2.getX();
-        int tile2Y = (int) tile2.getY();
+        int tile1X = tile1.getX();
+        int tile1Y = tile1.getY();
+        int tile2X = tile2.getX();
+        int tile2Y = tile2.getY();
 
         // set initially selected tile coords to be swap tile coords
         tile1.setX(tile2X);

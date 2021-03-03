@@ -7,12 +7,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BejeweledBoard extends Board {
-    private BejeweledTile selectedTile;
-    // there are 8 types of tiles
 
-    // 0: blank
     private final List<Map<String, Integer>> matches;
-    private List<Tile> selectedTiles; // first tile is first selected, second is second selected
+    private BejeweledTile selectedTile;
 
     public BejeweledBoard(){
         super(8, 8);
@@ -44,10 +41,10 @@ public class BejeweledBoard extends Board {
 
     @Override
     public void initialize() {
-        for (int i = 0; i < width; i++) {
+        for (int row = 0; row < height; row++) {
             tiles.add(new ArrayList<>());
-            for (int j = 0; j <height; j++) {
-                tiles.get(i).add(new BejeweledTile(i, j, 0));
+            for (int col = 0; col < width; col++) {
+                tiles.get(row).add(new BejeweledTile(col, row, 0));
             }
         }
 
@@ -58,16 +55,16 @@ public class BejeweledBoard extends Board {
         this.matches.clear();
         int totalMatches = 0;
         //horizontal
-        for(int i = 0; i<height; i++) {
+        for(int row = 0; row < height; row++) {
             int matchLen = 1;
 
-            for(int j = 0; j<width; j++){
+            for(int col = 0; col < width; col++){
                 boolean noMoreMatch = false;
-                if(j == this.width - 1) {
+                if(col == this.width - 1) {
                     noMoreMatch = true;
                 }
                 else {
-                    if(tiles.get(i).get(j).getType() == tiles.get(i).get(j+1).getType()){
+                    if(tiles.get(row).get(col).getType() == tiles.get(row).get(col+1).getType()){
                         ++matchLen;
                     }
                     else {
@@ -78,8 +75,8 @@ public class BejeweledBoard extends Board {
                 if(noMoreMatch) {
                     if(matchLen >= 3) {
                         matches.add(new HashMap<>());
-                        matches.get(totalMatches).put("row", i);
-                        matches.get(totalMatches).put("col", j+1-matchLen);
+                        matches.get(totalMatches).put("row", row);
+                        matches.get(totalMatches).put("col", col+1-matchLen);
                         matches.get(totalMatches).put("hor", 1);
                         matches.get(totalMatches).put("length", matchLen);
                         totalMatches++;
@@ -89,16 +86,16 @@ public class BejeweledBoard extends Board {
             }
         }
         //vertical
-        for(int i = 0; i<width; i++) {
+        for(int col = 0; col < width; col++) {
             int matchLen = 1;
 
-            for(int j = 0; j<height; j++) {
+            for(int row = 0; row<height; row++) {
                 boolean noMoreMatch = false;
-                if(j == this.height-1) {
+                if(row == this.height-1) {
                     noMoreMatch = true;
                 }
                 else {
-                    if(tiles.get(j).get(i).getType() == tiles.get(j+1).get(i).getType()){
+                    if(tiles.get(row).get(col).getType() == tiles.get(row+1).get(col).getType()){
                         ++matchLen;
                     }
                     else {
@@ -108,8 +105,8 @@ public class BejeweledBoard extends Board {
                 if(noMoreMatch) {
                     if(matchLen >= 3) {
                         matches.add(new HashMap<>());
-                        matches.get(totalMatches).put("col", i);
-                        matches.get(totalMatches).put("row", j+1-matchLen);
+                        matches.get(totalMatches).put("col", col);
+                        matches.get(totalMatches).put("row", row+1-matchLen);
                         matches.get(totalMatches).put("hor", 0);
                         matches.get(totalMatches).put("length", matchLen);
                         totalMatches++;
@@ -202,21 +199,21 @@ public class BejeweledBoard extends Board {
     //find moves
     public boolean hasValidMoves() {
         Tile tile;
-        for (int i = 0; i < width-1; i++) {
-            for (int j = 0; j < height-1; j++) {
-                tile = tiles.get(i).get(j);
-                swapTiles(tile, tiles.get(i+1).get(j));
+        for (int row = 0; row < height-1; row++) {
+            for (int col = 0; col < width-1; col++) {
+                tile = tiles.get(row).get(col);
+                swapTiles(tile, tiles.get(row+1).get(col));
                 if (hasMatches()){
-                    tile = tiles.get(i).get(j);
-                    swapTiles(tile, tiles.get(i+1).get(j)); // swap back
+                    tile = tiles.get(row).get(col);
+                    swapTiles(tile, tiles.get(row+1).get(col)); // swap back
                     return true;
                 }
 
-                tile = tiles.get(i).get(j);
-                swapTiles(tile, tiles.get(i).get(j+1));
+                tile = tiles.get(row).get(col);
+                swapTiles(tile, tiles.get(row).get(col+1));
                 if (hasMatches()){
-                    tile = tiles.get(i).get(j);
-                    swapTiles(tile, tiles.get(i).get(j+1)); // swap back
+                    tile = tiles.get(row).get(col);
+                    swapTiles(tile, tiles.get(row).get(col+1)); // swap back
                     return true;
                 }
 
@@ -251,26 +248,17 @@ public class BejeweledBoard extends Board {
         tile2.setY(tile1Y);
 
         // swap tile locations on the board
-        tiles.get(tile1X).set(tile1Y, tile2);
-        tiles.get(tile2X).set(tile2Y, tile1);
-    }
-
-    public void printBoard(){
-        for(int i = 0; i < width; ++i){
-            for(int j = 0; j < height; ++j){
-                System.out.print(tiles.get(i).get(j).getType() + " ");
-            }
-            System.out.println();
-        }
+        tiles.get(tile1Y).set(tile1X, tile2);
+        tiles.get(tile2Y).set(tile2X, tile1);
     }
 
     private void setupBoard() {
         boolean done = false;
 
         while (!done) {
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    tiles.get(i).get(j).setType( (int)(Math.random()*7) + 1);
+            for (int row = 0; row < height; row++) {
+                for (int col = 0; col < width; col++) {
+                    tiles.get(row).get(col).setType( (int)(Math.random()*7) + 1);
                 }
             }
             // remove matches

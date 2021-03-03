@@ -22,8 +22,10 @@ public class MainViewController extends AnchorPane {
   }
 
   public void playBejeweled() {
-    final Bejeweled bejeweled = new Bejeweled();
-    bejeweled.launch();
+    final MultiplayerGame game = new MultiplayerGame();
+    game.addGame(new Bejeweled(1));
+    game.addGame(new Bejeweled(2));
+    game.launch();
   }
 
   public void playPuzzleBobble() {

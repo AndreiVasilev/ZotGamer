@@ -1,35 +1,56 @@
 package edu.uci.puzzlebobble;
 
 import edu.uci.tmge.Board;
-//change to PBtile
-
 import edu.uci.tmge.Tile;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 
 public class PuzzleBobbleBoard extends Board {
-    private Tile selectTile;
 
     //change to PBtile
     private List<Tile> matches;
-    private List<Tile> selectedTiles;
+    private final int tileHeight;
+    private final int tileWidth;
+    private final int rowHeight;
+    private final int rowOffset;
+    private final int boardWidth;
+    private final int boardHeight;
+
 
     public PuzzleBobbleBoard(){
-        super(8, 10);
+        super(15,14 ); //will be calculated later
+        boardHeight = 620;
+        boardWidth = 620;
+        tileHeight = 40;
+        tileWidth = 40;
+        rowHeight = 34;
+        rowOffset = 0;
+        //windowHeight and windowWidth will be calculated in the init
+        //tiles does not to be instatiated bc it is called in board? correct? feel free to
+        //ping me on disc bc Id like to learn, you can del afterwards- car
+    }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
     }
 
     @Override
     public void initialize() {
-        for (int i = 0; i < width; i++) {
+        for (int row = 0; row < height; row++) {
             tiles.add(new ArrayList<>());
-            for (int j = 0; j < height; j++) {
-                tiles.get(i).add(new Tile(i, j, 0));
-                //change to PBTile
+            for (int col = 0; col < width; col++) {
+                tiles.get(row).add(new PuzzleBobbleTile(col, row, 0, 0));
             }
-
         }
+        setupBoard();
     }
 
     @Override
@@ -39,11 +60,10 @@ public class PuzzleBobbleBoard extends Board {
 
     @Override
     public void removeMatches() {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < height; col++) {
 
             }
-
         }
     }
 
@@ -56,8 +76,10 @@ public class PuzzleBobbleBoard extends Board {
         return  false;
     }
 
-    public void swapWithSelected(Tile tile) {
-
+    public Collection<PuzzleBobbleTile> getTiles() {
+        return tiles.stream().flatMap(Collection::stream)
+            .map(tile -> (PuzzleBobbleTile)tile)
+            .collect(Collectors.toList());
     }
 
     // breath first search for neighboring matching tiles
@@ -106,29 +128,53 @@ public class PuzzleBobbleBoard extends Board {
     }
 
     private void setupBoard() {
-        boolean done = false;
+        //boolean done = false;
 
-        while (!done) {
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    tiles.get(i).get(j).setType( (int)(Math.random()*6) + 1);
+        for (int row = 0; row < height; row++) {
+            int randomTile = (int)(Math.random() * 6) + 1;
+            int count = 0;
+            for (int col = 0; col < width; col++) {
+                if (count >=2){
+
+                    int newTile = (int)(Math.random() * 7);
+                    //if random is STILL the same, force a diff color
+                    if (newTile == randomTile)
+                        newTile = (newTile + 1) % 6; // there are 7 colors, 6 bc zero counts
+                    //forces no more than 2 same color per row
+                    randomTile = newTile;
                 }
+                count++;
+
+                if (row < height/2) // fill half the height
+                    tiles.get(row).get(col).setType(randomTile);
+                else
+                    tiles.get(row).get(col).setType(-1);
             }
-        }
-
-        // remove matches
-        removeMatches();
-
-
-        // check if there are valid moves
-        if (hasValidMoves()) {
-            done = true;
         }
     }
 
-    public ArrayList<Integer> getTileCoordinates(int row, int column){
-        //var xpos = column * tile
-        //placeholder for now
-        return new ArrayList<Integer>();
+    public int getXTileCoordinates(int column, int row) {
+        int tileX = column * tileWidth;
+        if ((row + rowOffset) % 2 == 0)
+            tileX += tileWidth / 2;
+        return tileX;
+    }
+
+    public int getYTileCoordinates(int row) {
+        return row * rowHeight;
+    }
+
+    public int getXGridPosition(int x){
+        int gridY = x / rowHeight;
+
+        int xOffset = 0;
+        if ((gridY + rowOffset) % 2 == 0)
+            xOffset = tileWidth/2;
+
+        return (x - xOffset) / tileWidth;
+    }
+
+    public int getYGridPosition(int y){
+        return y  / rowHeight;
     }
 }

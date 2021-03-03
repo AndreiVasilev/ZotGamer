@@ -20,7 +20,7 @@ public class BejeweledTile extends Tile {
 
   private final Rectangle visualTile;
 
-  public BejeweledTile(final double x, final double y, final int type) {
+  public BejeweledTile(final int x, final int y, final int type) {
     super(x, y, type);
     this.visualTile = new Rectangle();
     initializeStyle();

@@ -7,14 +7,16 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 public class TileShootingAnimation extends AnimationTimer {
 
-  private static final double VELOCITY = 15.0;
+  private static final double VELOCITY = 20.0;
+  private final PuzzleBobbleBoard board;
   private final PuzzleBobbleTile tile;
   private final BooleanProperty stopped;
   private double deltaX;
   private double deltaY;
   private double angle;
 
-  public TileShootingAnimation(final PuzzleBobbleTile tile, final double initialAngle) {
+  public TileShootingAnimation(final PuzzleBobbleBoard board, final PuzzleBobbleTile tile, final double initialAngle) {
+    this.board = board;
     this.tile = tile;
     angle = initialAngle;
     deltaX = getDeltaX();
@@ -28,12 +30,12 @@ public class TileShootingAnimation extends AnimationTimer {
 
   @Override
   public void handle(long now) {
-    tile.setX(tile.getX() + deltaX);
-    tile.setY(tile.getY() + deltaY);
+    tile.setVisualX(tile.getVisualX() + deltaX);
+    tile.setVisualY(tile.getVisualY() + deltaY);
 
     // TODO use board dimensions for checking collisions with edges
-    if (tile.getX() - tile.getRadius() <= 0.0 ||
-        tile.getX() + tile.getRadius() >= 789.0)
+    if (tile.getVisualX() - tile.getRadius() <= 0.0 ||
+        tile.getVisualX() + tile.getRadius() >= board.getBoardWidth())
     {
       angle = -angle - Math.PI;
       deltaX = getDeltaX();
@@ -41,7 +43,8 @@ public class TileShootingAnimation extends AnimationTimer {
     }
 
     // TODO check for collisions with other tiles, not just top of board
-    if (tile.getY() - tile.getRadius() <= 0.0) {
+    if (tile.getVisualY() - tile.getRadius() <= 0.0) {
+      tile.setVisualY(tile.getRadius());
       stop();
       stopped.set(true);
     }

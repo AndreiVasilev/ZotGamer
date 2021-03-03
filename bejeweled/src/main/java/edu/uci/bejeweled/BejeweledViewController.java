@@ -3,25 +3,27 @@ package edu.uci.bejeweled;
 
 import edu.uci.tmge.Pausable;
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.util.Collection;
 
-public class BejeweledViewController extends HBox implements Pausable {
+public class BejeweledViewController extends StackPane implements Pausable {
 
+  @FXML private HBox gameFrame;
+  @FXML private AnchorPane pauseScreen;
   @FXML private GridPane tileGrid;
   @FXML private Label playerLabel;
   @FXML private Label scoreLabel;
   private final BejeweledBoard bejeweledBoard;
+  private final BooleanProperty turnOver;
 
   public BejeweledViewController(final BejeweledBoard bejeweledBoard) {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/BejeweledView.fxml"));
@@ -34,7 +36,12 @@ public class BejeweledViewController extends HBox implements Pausable {
     }
 
     this.bejeweledBoard = bejeweledBoard;
+    turnOver = new SimpleBooleanProperty(false);
     initializeTileGrid();
+  }
+
+  public BooleanProperty isTurnOver() {
+    return turnOver;
   }
 
   private void initializeTileGrid() {
@@ -95,6 +102,7 @@ public class BejeweledViewController extends HBox implements Pausable {
                     drawTileGrid();
                   } else {
                     stop();
+                    turnOver.set(true);
                     bejeweledBoard.resetSelectedTile();
                   }
                 }
@@ -109,17 +117,20 @@ public class BejeweledViewController extends HBox implements Pausable {
           bejeweledBoard.selectTile(tile);
         }
       });
-      tileGrid.add(tile.getVisualTile(), (int) tile.getX(), (int) tile.getY());
+      tileGrid.add(tile.getVisualTile(), tile.getX(), tile.getY());
     }
   }
 
   @Override
   public void pause() {
-    setDisable(true);
+    gameFrame.setDisable(true);
+    pauseScreen.setVisible(true);
   }
 
   @Override
   public void resume() {
-    setDisable(false);
+    gameFrame.setDisable(false);
+    pauseScreen.setVisible(false);
+    turnOver.set(false);
   }
 }

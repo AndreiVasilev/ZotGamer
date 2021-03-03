@@ -18,13 +18,15 @@ public class PuzzleBobbleTile extends Tile {
     };
 
     private final Circle visualTile;
+    public int shift;
 
     public PuzzleBobbleTile(final int type) {
-        this(0.0, 0.0, type);
+        this(0, 0, type, 0);
     }
 
-    public PuzzleBobbleTile(final double x, final double y, final int type) {
+    public PuzzleBobbleTile(final int x, final int y, final int type, int shift) {
         super(x, y, type);
+        this.shift = shift;
         visualTile = new Circle();
         visualTile.setFill(COLORS[type]);
         visualTile.setStroke(Color.valueOf("#464646"));
@@ -33,14 +35,21 @@ public class PuzzleBobbleTile extends Tile {
     }
 
     @Override
-    public void setX(double x) {
-        super.setX(x);
+    public void setType(int type) {
+        super.setType(type);
+        if (type == -1) {
+            visualTile.setOpacity(0.0);
+        } else {
+            visualTile.setFill(COLORS[type]);
+            visualTile.setOpacity(1.0);
+        }
+    }
+
+    public void setVisualX(double x) {
         visualTile.setLayoutX(x);
     }
 
-    @Override
-    public void setY(double y) {
-        super.setY(y);
+    public void setVisualY(double y) {
         visualTile.setLayoutY(y);
     }
 
@@ -50,5 +59,13 @@ public class PuzzleBobbleTile extends Tile {
 
     public double getRadius() {
         return visualTile.getRadius();
+    }
+
+    public double getVisualX() {
+        return visualTile.getLayoutX();
+    }
+
+    public double getVisualY() {
+        return visualTile.getLayoutY();
     }
 }

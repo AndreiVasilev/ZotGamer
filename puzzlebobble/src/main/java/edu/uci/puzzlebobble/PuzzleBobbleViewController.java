@@ -27,8 +27,6 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
     private static final double MIN_ANGLE = -2.87979;
     private static final double NEXT_TILE_X = 134.0;
     private static final double NEXT_TILE_Y = 567.0;
-    private static final double X_OFFSET = 20.0;
-    private static final double Y_OFFSET = 20.0;
     private final PuzzleBobbleBoard board;
     private final BooleanProperty turnOver;
     private PuzzleBobbleTile currentTile;
@@ -61,8 +59,8 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
         final Collection<PuzzleBobbleTile> tiles = board.getTiles();
         for (final PuzzleBobbleTile tile : tiles) {
             tilePane.getChildren().add(tile.getVisualTile());
-            tile.setVisualX(X_OFFSET + board.getXTileCoordinates(tile.getX(), tile.getY()));
-            tile.setVisualY(Y_OFFSET + board.getYTileCoordinates(tile.getY()));
+            tile.setVisualX(board.getXTileCoordinates(tile.getX(), tile.getY()));
+            tile.setVisualY(board.getYTileCoordinates(tile.getY()));
         }
     }
 

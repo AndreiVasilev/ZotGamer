@@ -2,8 +2,6 @@ package edu.uci.bejeweled;
 
 import edu.uci.tmge.Game;
 import edu.uci.tmge.GameEvent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -12,7 +10,6 @@ public class Bejeweled implements Game {
   private final Map<GameEvent, List<Runnable>> eventActions;
   private final BejeweledViewController viewController;
   private final BejeweledBoard board;
-  private final Stage gameWindow;
   private final String playerName;
 
   public Bejeweled(final String playerName, final int player) {
@@ -20,11 +17,6 @@ public class Bejeweled implements Game {
 
     board = new BejeweledBoard();
     board.initialize();
-
-    gameWindow = new Stage();
-    gameWindow.setResizable(false);
-    gameWindow.setTitle("Puzzle Bobble - Player " + player);
-    gameWindow.setOnCloseRequest(event -> quit());
 
     viewController = new BejeweledViewController(board);
     eventActions = new HashMap<>();
@@ -36,10 +28,6 @@ public class Bejeweled implements Game {
 
   @Override
   public void launch() {
-    final Scene mainScene = new Scene(viewController);
-    gameWindow.setScene(mainScene);
-    gameWindow.show();
-
     eventActions.getOrDefault(GameEvent.GAME_START, Collections.emptyList()).forEach(Runnable::run);
 
     viewController.isTurnOver().addListener((observable, oldValue, turnOver) -> {
@@ -74,7 +62,6 @@ public class Bejeweled implements Game {
   public void quit() {
     viewController.isGameOver().set(true);
     eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
-    gameWindow.close();
   }
 
   @Override
@@ -108,21 +95,5 @@ public class Bejeweled implements Game {
     if (eventActions.containsKey(event)) {
       eventActions.get(event).remove(action);
     }
-  }
-
-  public void setX(double x) {
-    gameWindow.setX(x);
-  }
-
-  public void setY(double y) {
-    gameWindow.setY(y);
-  }
-
-  public double getX() {
-    return gameWindow.getX();
-  }
-
-  public double getY() {
-    return gameWindow.getY();
   }
 }

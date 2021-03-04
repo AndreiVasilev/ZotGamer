@@ -56,7 +56,7 @@ public class Bejeweled implements Game {
 
   @Override
   public double getScore() {
-    return 0;
+    return board.getScore();
   }
 
   @Override

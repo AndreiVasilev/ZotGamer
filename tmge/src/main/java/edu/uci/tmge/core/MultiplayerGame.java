@@ -1,21 +1,28 @@
-package edu.uci.tmge;
+package edu.uci.tmge.core;
+
+import edu.uci.tmge.*;
 
 import java.util.*;
 
 public class MultiplayerGame implements Pausable, Actionable {
 
     private final Map<GameEvent, List<Runnable>> eventActions;
+    private final List<GameWindow> gameWindows;
     private final List<Game> games;
     private int currentPlayer;
+    private boolean quit;
 
     public MultiplayerGame(){
         eventActions = new HashMap<>();
+        gameWindows = new ArrayList<>();
         games = new ArrayList<>();
         currentPlayer = 0;
+        quit = false;
     }
 
-    public void addGame(Game game){
+    public void addGame(Game game, GameWindow gameWindow){
         games.add(game);
+        gameWindows.add(gameWindow);
     }
 
     public List<Game> getGames() {
@@ -28,6 +35,11 @@ public class MultiplayerGame implements Pausable, Actionable {
             game.addAction(GameEvent.TURN_END, this::switchPlayers);
             game.addAction(GameEvent.GAME_END, this::quit);
             game.launch();
+
+            final GameWindow window = gameWindows.get(i);
+            window.show();
+            window.setScreenX(window.getScreenX() - 500.0 + i * window.getWidth());
+
             if (i != currentPlayer) {
                 game.pause();
             }
@@ -55,7 +67,9 @@ public class MultiplayerGame implements Pausable, Actionable {
             }
         }
 
-        eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
+        if (games.stream().allMatch(Game::isOver)) {
+            eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
+        }
     }
 
     public void switchPlayers(){

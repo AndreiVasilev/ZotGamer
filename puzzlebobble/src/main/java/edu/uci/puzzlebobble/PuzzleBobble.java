@@ -2,8 +2,6 @@ package edu.uci.puzzlebobble;
 
 import edu.uci.tmge.Game;
 import edu.uci.tmge.GameEvent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -12,31 +10,19 @@ public class PuzzleBobble implements Game {
   private final Map<GameEvent, List<Runnable>> eventActions;
   private final PuzzleBobbleViewController viewController;
   private final PuzzleBobbleBoard board;
-  private final Stage gameWindow;
   private final String playerName;
 
-  public PuzzleBobble(final String playerName, final int player) {
+  public PuzzleBobble(final String playerName) {
     this.playerName = playerName;
-
-    board = new PuzzleBobbleBoard();
-    board.initialize();
-
-    viewController = new PuzzleBobbleViewController(board);
-
-    gameWindow = new Stage();
-    gameWindow.setResizable(false);
-    gameWindow.setTitle("Puzzle Bobble - Player " + player);
-    gameWindow.setOnCloseRequest(event -> quit());
-
     eventActions = new HashMap<>();
+    board = new PuzzleBobbleBoard();
+    viewController = new PuzzleBobbleViewController(board);
   }
 
   @Override
   public void launch() {
-    final Scene mainScene = new Scene(viewController);
-    gameWindow.setOnCloseRequest(event -> quit());
-    gameWindow.setScene(mainScene);
-    gameWindow.show();
+    board.initialize();
+    viewController.initializeView();
 
     eventActions.getOrDefault(GameEvent.GAME_START, Collections.emptyList()).forEach(Runnable::run);
 
@@ -54,7 +40,6 @@ public class PuzzleBobble implements Game {
         quit();
       }
     }));
-
   }
 
   @Override
@@ -73,7 +58,6 @@ public class PuzzleBobble implements Game {
   public void quit() {
     viewController.isGameOver().set(true);
     eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
-    gameWindow.close();
   }
 
   @Override
@@ -109,19 +93,7 @@ public class PuzzleBobble implements Game {
     }
   }
 
-  public void setX(double x) {
-    gameWindow.setX(x);
-  }
-
-  public void setY(double y) {
-    gameWindow.setY(y);
-  }
-
-  public double getX() {
-    return gameWindow.getX();
-  }
-
-  public double getY() {
-    return gameWindow.getY();
+  public PuzzleBobbleViewController getViewController() {
+    return viewController;
   }
 }

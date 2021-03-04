@@ -30,6 +30,10 @@ public class Bejeweled implements Game {
     eventActions = new HashMap<>();
   }
 
+  public BejeweledViewController getViewController() {
+    return viewController;
+  }
+
   @Override
   public void launch() {
     final Scene mainScene = new Scene(viewController);

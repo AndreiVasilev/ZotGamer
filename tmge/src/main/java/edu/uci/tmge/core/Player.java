@@ -22,6 +22,10 @@ public class Player {
     highScores.put(gameName, score);
   }
 
+  public Map<String, Double> getHighScores() {
+    return new HashMap<>(highScores);
+  }
+
   public double getHighScore(final String gameName) {
     if (highScores.containsKey(gameName)) {
       return highScores.get(gameName);

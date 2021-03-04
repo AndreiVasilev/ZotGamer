@@ -16,7 +16,7 @@ public class GameLauncher {
     public GameLauncher() {
         gameWindowFactories = new HashMap<>();
         gameFactories = new HashMap<>();
-        playerManager = new PlayerManager();
+        playerManager = PlayerManager.instance();
     }
 
     public void registerGame(final String name, final GameFactory gameFactory, final GameWindowFactory windowFactory) {
@@ -38,9 +38,13 @@ public class GameLauncher {
 
             multiplayerGame.launch();
 
-            // TODO get scores from games and save to player profiles
             multiplayerGame.addAction(GameEvent.GAME_END, () -> {
-                // manager.save();
+                final List<Game> games = multiplayerGame.getGames();
+                for (final Game game : games) {
+                    final String player = game.getPlayerName();
+                    final double score = game.getScore();
+                    playerManager.saveScore(player, game.getGameName(), score);
+                }
             });
         }
     }

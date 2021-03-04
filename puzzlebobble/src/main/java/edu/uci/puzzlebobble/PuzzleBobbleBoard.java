@@ -84,6 +84,12 @@ public class PuzzleBobbleBoard extends Board {
             .collect(Collectors.toList());
     }
 
+    public void setTilesToEmpty(ArrayList<PuzzleBobbleTile> arrOfTiles){
+        for (PuzzleBobbleTile tile: arrOfTiles){
+            tile.setType(-1);
+        }
+    }
+
     // breath first search for neighboring matching tiles
     public ArrayList<PuzzleBobbleTile> findGroups(PuzzleBobbleTile startingTile) {
         // initialize a 2D array to check if visited each cell

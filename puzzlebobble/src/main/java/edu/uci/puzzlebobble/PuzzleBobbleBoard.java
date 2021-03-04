@@ -85,48 +85,72 @@ public class PuzzleBobbleBoard extends Board {
     }
 
     // breath first search for neighboring matching tiles
-    public ArrayList<Tile> findGroups(int tx, int ty) {
-        // if resetProcessedFlags() needed -- for loop all && set tiles.processed = false
-
-        Tile startingTile = tiles.get(tx).get(ty);
+    public ArrayList<PuzzleBobbleTile> findGroups(PuzzleBobbleTile startingTile) {
+        // initialize a 2D array to check if visited each cell
+        int[][] visited = new int[this.height][this.width];
 
         // initializing queue that'll hold neighbors of the same .type to further inspect
-        LinkedList<Tile> queueOfTilesToProcess = new LinkedList<Tile>();
+        LinkedList<PuzzleBobbleTile> queueOfTilesToProcess = new LinkedList<PuzzleBobbleTile>();
         queueOfTilesToProcess.add(startingTile);
-        // TODO: startingTile.processed = true;
 
-        // init list that'll hold the matching groups
-        ArrayList<Tile> matchingGroups = new ArrayList<>();
+        // initializing list that'll hold the matching tiles
+        ArrayList<PuzzleBobbleTile> matchingGroups = new ArrayList<>();
 
         // search for neighbors
         while(queueOfTilesToProcess.size() > 0){
-            // remove a Tile from queue
-            Tile curTile = queueOfTilesToProcess.remove();
+            // remove Tile at the front of the queue
+            PuzzleBobbleTile curTile = queueOfTilesToProcess.remove();
 
-            // skip tiles that are empty OR have been processed
-            if (curTile.getType() == 0
-                // || curTile.processed == true
-            ) {
+            // skip current Tile if it is empty OR has been visited
+            if (curTile.getType() == -1 || visited[curTile.getY()][curTile.getX()] == 1) {
                 continue;
             }
 
+            // if current tile has the same color type as the startingTile
             if (curTile.getType() == startingTile.getType()){
                 matchingGroups.add(curTile);
 
-                // ArrayList<Tile> neighbors = getNeighbors(curTile.x, curTile.y);
+                ArrayList<PuzzleBobbleTile> neighbors = getNeighbors(curTile);
 
-                /*
-                    for(Tile t : neighbors){
-                        if ( !t.processed ){
-                            queueOfTilesToProcess.add(t);
-                            t.processed = true;
-                        }
+                for(PuzzleBobbleTile t : neighbors){
+                    // if a neighbor has not been visited of the currentTile
+                    if (visited[t.getY()][t.getX()] != 1){
+                        // then add to queue to process it's color and further neighbors
+                        queueOfTilesToProcess.add(t);
                     }
-                */
+                }
             }
+            // set the current Tile as 'true' in visited array
+            visited[curTile.getY()][curTile.getX()] = 1;
         }
 
         return matchingGroups;
+    }
+    private ArrayList<PuzzleBobbleTile> getNeighbors(PuzzleBobbleTile aTile){
+        // Neighbor offset tables
+        int[][][] neighborOffsets = {
+                // Even row offsets
+                {{1, 0}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}},
+                // Odd row offsets
+                {{1, 0}, {1, 1}, {0, 1}, {-1, 0}, {0, -1}, {1, -1}}
+        };
+
+        int[][] correspondingOffsets = neighborOffsets[ aTile.getY() % 2 ];
+
+        ArrayList<PuzzleBobbleTile> neighbors = new ArrayList<PuzzleBobbleTile>();
+
+        for (int i = 0; i < correspondingOffsets.length; i++){
+            // a neighbor's coordinates
+            int nbX = aTile.getX() + correspondingOffsets[i][0];
+            int nbY = aTile.getY() + correspondingOffsets[i][1];
+
+            // Ensure the neighbor tile is within bounds of the board
+            // before storing as a neighbor
+            if (nbX >= 0 && nbX < width && nbY >= 0 && nbY < height){
+                neighbors.add( (PuzzleBobbleTile)tiles.get(nbY).get(nbX) );
+            }
+        }
+        return neighbors;
     }
 
     private void setupBoard() {
@@ -176,6 +200,8 @@ public class PuzzleBobbleBoard extends Board {
         int col = getXGridPosition(shotTile.getVisualX());
         shotTile.setVisualX(getXTileCoordinates(col, row));
         shotTile.setVisualY(getYTileCoordinates(row));
+        shotTile.setX(col);
+        shotTile.setY(row);
         this.tiles.get(row).set(col, shotTile);
     }
 

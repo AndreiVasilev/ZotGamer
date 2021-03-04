@@ -5,6 +5,8 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import java.util.ArrayList; //TODO: Can be deleted later if not need to iterate over matching tiles
+
 public class TileShootingAnimation extends AnimationTimer {
 
   private static final double VELOCITY = 20.0;
@@ -44,9 +46,17 @@ public class TileShootingAnimation extends AnimationTimer {
 
     // TODO check for collisions with other tiles, not just top of board
     if (board.isCollided(tile)) {
-//      tile.setVisualY(tile.getRadius());
       stop();
       stopped.set(true);
+
+      System.out.println("New Move Done. Bobble Snapped Into: " + "("+tile.getY()+","+tile.getX()+")" );
+
+      ArrayList<PuzzleBobbleTile> matchingTiles = board.findGroups(tile);
+
+      for (PuzzleBobbleTile t : matchingTiles){
+        System.out.println("("+t.getY() + "," + t.getX() + ")");
+      }
+
     }
   }
 

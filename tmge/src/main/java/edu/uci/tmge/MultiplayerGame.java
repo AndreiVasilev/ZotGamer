@@ -1,15 +1,19 @@
 package edu.uci.tmge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MultiplayerGame {
+public class MultiplayerGame implements Pausable, Actionable {
 
+    private final Map<GameEvent, List<Runnable>> eventActions;
     private final List<Game> games;
     private int currentPlayer;
 
     public MultiplayerGame(){
-        this.games = new ArrayList<>();
+        eventActions = new HashMap<>();
+        games = new ArrayList<>();
         currentPlayer = 0;
     }
 
@@ -20,8 +24,8 @@ public class MultiplayerGame {
     public void launch() {
         for (int i = 0; i < games.size(); ++i) {
             final Game game = games.get(i);
-            game.addEndOfTurnAction(this::switchPlayers);
-            game.addEndOfGameAction(this::quit);
+            game.addAction(GameEvent.TURN_END, this::switchPlayers);
+            game.addAction(GameEvent.GAME_END, this::quit);
             game.launch();
             if (i != currentPlayer) {
                 game.pause();
@@ -29,10 +33,12 @@ public class MultiplayerGame {
         }
     }
 
+    @Override
     public void resume(){
         games.get(currentPlayer).resume();
     }
 
+    @Override
     public void pause(){
         games.get(currentPlayer).pause();
     }
@@ -49,5 +55,18 @@ public class MultiplayerGame {
         games.get(currentPlayer).pause();
         currentPlayer = (currentPlayer + 1) % games.size();
         games.get(currentPlayer).resume();
+    }
+
+    @Override
+    public void addAction(GameEvent event, Runnable action) {
+        eventActions.putIfAbsent(event, new ArrayList<>());
+        eventActions.get(event).add(action);
+    }
+
+    @Override
+    public void removeAction(GameEvent event, Runnable action) {
+        if (eventActions.containsKey(event)) {
+            eventActions.get(event).remove(action);
+        }
     }
 }

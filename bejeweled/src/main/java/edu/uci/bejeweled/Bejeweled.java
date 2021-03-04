@@ -1,18 +1,17 @@
 package edu.uci.bejeweled;
 
 import edu.uci.tmge.Game;
+import edu.uci.tmge.GameEvent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Bejeweled implements Game {
 
+  private final Map<GameEvent, List<Runnable>> eventActions;
   private final BejeweledViewController viewController;
   private final BejeweledBoard board;
-  private final List<Runnable> endOfTurnActions;
-  private final List<Runnable> endOfGameActions;
   private final Stage gameWindow;
   private final String playerName;
 
@@ -28,8 +27,7 @@ public class Bejeweled implements Game {
     gameWindow.setOnCloseRequest(event -> quit());
 
     viewController = new BejeweledViewController(board);
-    endOfTurnActions = new ArrayList<>();
-    endOfGameActions = new ArrayList<>();
+    eventActions = new HashMap<>();
   }
 
   @Override
@@ -38,9 +36,14 @@ public class Bejeweled implements Game {
     gameWindow.setScene(mainScene);
     gameWindow.show();
 
+    eventActions.getOrDefault(GameEvent.GAME_START, Collections.emptyList()).forEach(Runnable::run);
+
     viewController.isTurnOver().addListener((observable, oldValue, turnOver) -> {
-      if (turnOver) {
-        endOfTurnActions.forEach(Runnable::run);
+      if (turnOver && eventActions.containsKey(GameEvent.TURN_END)) {
+        eventActions.get(GameEvent.TURN_END).forEach(Runnable::run);
+      }
+      else if (!turnOver && eventActions.containsKey(GameEvent.TURN_START)) {
+        eventActions.get(GameEvent.TURN_START).forEach(Runnable::run);
       }
     });
 
@@ -64,7 +67,7 @@ public class Bejeweled implements Game {
   @Override
   public void quit() {
     viewController.isGameOver().set(true);
-    endOfGameActions.forEach(Runnable::run);
+    eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
     gameWindow.close();
   }
 
@@ -85,26 +88,19 @@ public class Bejeweled implements Game {
 
   @Override
   public boolean isOver() {
-    return board.isGameOver();
+    return board.isGameOver() || viewController.isGameOver().get();
   }
 
   @Override
-  public void addEndOfTurnAction(Runnable action) {
-    endOfTurnActions.add(action);
+  public void addAction(GameEvent event, Runnable action) {
+    eventActions.putIfAbsent(event, new ArrayList<>());
+    eventActions.get(event).add(action);
   }
 
   @Override
-  public void removeEndOfTurnAction(Runnable action) {
-    endOfTurnActions.remove(action);
-  }
-
-  @Override
-  public void addEndOfGameAction(Runnable action) {
-    endOfGameActions.add(action);
-  }
-
-  @Override
-  public void removeEndOfGameAction(Runnable action) {
-    endOfGameActions.remove(action);
+  public void removeAction(GameEvent event, Runnable action) {
+    if (eventActions.containsKey(event)) {
+      eventActions.get(event).remove(action);
+    }
   }
 }

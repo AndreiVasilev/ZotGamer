@@ -85,7 +85,7 @@ public class Bejeweled implements Game {
 
   @Override
   public boolean isOver() {
-    return viewController.isGameOver().get();
+    return board.isGameOver();
   }
 
   @Override

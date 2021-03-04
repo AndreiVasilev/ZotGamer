@@ -24,6 +24,7 @@ public class BejeweledViewController extends StackPane implements Pausable {
   @FXML private Label scoreLabel;
   private final BejeweledBoard bejeweledBoard;
   private final BooleanProperty turnOver;
+  private final BooleanProperty gameOver;
 
   public BejeweledViewController(final BejeweledBoard bejeweledBoard) {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/BejeweledView.fxml"));
@@ -37,11 +38,16 @@ public class BejeweledViewController extends StackPane implements Pausable {
 
     this.bejeweledBoard = bejeweledBoard;
     turnOver = new SimpleBooleanProperty(false);
+    gameOver = new SimpleBooleanProperty(false);
     initializeTileGrid();
   }
 
   public BooleanProperty isTurnOver() {
     return turnOver;
+  }
+
+  public BooleanProperty isGameOver() {
+    return gameOver;
   }
 
   private void initializeTileGrid() {

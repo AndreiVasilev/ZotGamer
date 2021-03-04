@@ -1,9 +1,6 @@
 package edu.uci.tmge;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MultiplayerGame implements Pausable, Actionable {
 
@@ -31,16 +28,20 @@ public class MultiplayerGame implements Pausable, Actionable {
                 game.pause();
             }
         }
+
+        eventActions.getOrDefault(GameEvent.GAME_START, Collections.emptyList()).forEach(Runnable::run);
     }
 
     @Override
     public void resume(){
         games.get(currentPlayer).resume();
+        eventActions.getOrDefault(GameEvent.GAME_RESUME, Collections.emptyList()).forEach(Runnable::run);
     }
 
     @Override
     public void pause(){
         games.get(currentPlayer).pause();
+        eventActions.getOrDefault(GameEvent.GAME_PAUSE, Collections.emptyList()).forEach(Runnable::run);
     }
 
     public void quit(){
@@ -49,6 +50,8 @@ public class MultiplayerGame implements Pausable, Actionable {
                 game.quit();
             }
         }
+
+        eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
     }
 
     public void switchPlayers(){

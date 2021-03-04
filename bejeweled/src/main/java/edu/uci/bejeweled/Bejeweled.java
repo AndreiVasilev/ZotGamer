@@ -57,11 +57,13 @@ public class Bejeweled implements Game {
   @Override
   public void pause() {
     viewController.pause();
+    eventActions.getOrDefault(GameEvent.GAME_PAUSE, Collections.emptyList()).forEach(Runnable::run);
   }
 
   @Override
   public void resume() {
     viewController.resume();
+    eventActions.getOrDefault(GameEvent.GAME_RESUME, Collections.emptyList()).forEach(Runnable::run);
   }
 
   @Override
@@ -102,5 +104,21 @@ public class Bejeweled implements Game {
     if (eventActions.containsKey(event)) {
       eventActions.get(event).remove(action);
     }
+  }
+
+  public void setX(double x) {
+    gameWindow.setX(x);
+  }
+
+  public void setY(double y) {
+    gameWindow.setY(y);
+  }
+
+  public double getX() {
+    return gameWindow.getX();
+  }
+
+  public double getY() {
+    return gameWindow.getY();
   }
 }

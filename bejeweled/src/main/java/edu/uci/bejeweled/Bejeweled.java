@@ -19,10 +19,6 @@ public class Bejeweled implements Game {
     eventActions = new HashMap<>();
   }
 
-  public BejeweledViewController getViewController() {
-    return viewController;
-  }
-
   @Override
   public void launch() {
     board.initialize();
@@ -95,5 +91,9 @@ public class Bejeweled implements Game {
     if (eventActions.containsKey(event)) {
       eventActions.get(event).remove(action);
     }
+  }
+
+  public BejeweledViewController getViewController() {
+    return viewController;
   }
 }

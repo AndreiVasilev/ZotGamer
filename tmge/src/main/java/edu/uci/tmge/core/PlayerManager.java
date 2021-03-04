@@ -38,7 +38,7 @@ public class PlayerManager {
 
     public void saveScore(final String playerName, final String gameName, final double score) {
         final Player player = getPlayer(playerName);
-        if (player.getHighScore(gameName) < score) {
+        if (player.getHighScore(gameName) <= score) {
             player.addHighScore(gameName, score);
         }
     }

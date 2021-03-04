@@ -2,7 +2,9 @@ package edu.uci.main;
 
 import edu.uci.tmge.GameLauncher;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,14 +27,26 @@ public class MainViewController extends AnchorPane {
   }
 
   public void playBejeweled() {
-    gameLauncher.launchGame(GameType.BEJEWELED.name(), List.of("Player 1", "Player 2"));
+    launchGame(GameType.BEJEWELED);
   }
 
   public void playPuzzleBobble() {
-    gameLauncher.launchGame(GameType.PUZZLE_BOBBLE.name(), List.of("Player 1", "Player 2"));
+    launchGame(GameType.PUZZLE_BOBBLE);
   }
 
   public void viewPlayerProfiles() {
 
+  }
+
+  private void launchGame(final GameType gameType) {
+    final Stage nameWindow = new Stage();
+    final NameEntryController nameEntry = new NameEntryController(playerNames -> {
+      gameLauncher.launchGame(gameType.name(), playerNames);
+      nameWindow.close();
+    });
+
+    nameWindow.setScene(new Scene(nameEntry));
+    nameWindow.setResizable(false);
+    nameWindow.show();
   }
 }

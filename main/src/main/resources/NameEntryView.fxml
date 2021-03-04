@@ -39,7 +39,7 @@
       </AnchorPane>
       <AnchorPane>
          <children>
-            <Button mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#launchGame" prefHeight="50.0" prefWidth="140.0" text="Start Game" AnchorPane.rightAnchor="0.0">
+            <Button fx:id="startGame" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="140.0" text="Start Game" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font size="18.0" />
                </font>

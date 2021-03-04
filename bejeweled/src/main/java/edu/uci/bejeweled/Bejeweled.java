@@ -15,7 +15,7 @@ public class Bejeweled implements Game {
   public Bejeweled(final String playerName) {
     this.playerName = playerName;
     board = new BejeweledBoard();
-    viewController = new BejeweledViewController(board);
+    viewController = new BejeweledViewController(board, playerName);
     eventActions = new HashMap<>();
   }
 

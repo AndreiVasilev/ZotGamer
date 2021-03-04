@@ -45,6 +45,7 @@ public class GameLauncher {
                     final double score = game.getScore();
                     playerManager.saveScore(player, game.getGameName(), score);
                 }
+                playerManager.save();
             });
         }
     }

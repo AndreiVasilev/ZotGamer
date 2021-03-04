@@ -22,7 +22,7 @@ public class PuzzleBobble implements Game {
   @Override
   public void launch() {
     board.initialize();
-    viewController.initialize();
+    viewController.initializeView();
 
     eventActions.getOrDefault(GameEvent.GAME_START, Collections.emptyList()).forEach(Runnable::run);
 

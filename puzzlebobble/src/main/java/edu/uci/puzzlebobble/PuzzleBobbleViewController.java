@@ -48,6 +48,9 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
         this.board = board;
         turnOver = new SimpleBooleanProperty(false);
         gameOver = new SimpleBooleanProperty(false);
+    }
+
+    public void initialize() {
         initializeBoard();
         registerMouseListeners();
         initializeShooter();

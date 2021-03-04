@@ -22,17 +22,21 @@ public class MainViewController extends AnchorPane {
   }
 
   public void playBejeweled() {
-    final MultiplayerGame game = new MultiplayerGame();
-    game.addGame(new Bejeweled(1));
-    game.addGame(new Bejeweled(2));
-    game.launch();
+//    final MultiplayerGame game = new MultiplayerGame();
+//    game.addGame(new Bejeweled(1));
+//    game.addGame(new Bejeweled(2));
+//    game.launch();
+    final Bejeweled bejeweled = new Bejeweled(1);
+    bejeweled.launch();
   }
 
   public void playPuzzleBobble() {
-    final MultiplayerGame game = new MultiplayerGame();
-    game.addGame(new PuzzleBobble(1));
-    game.addGame(new PuzzleBobble(2));
-    game.launch();
+//    final MultiplayerGame game = new MultiplayerGame();
+//    game.addGame(new PuzzleBobble(1));
+//    game.addGame(new PuzzleBobble(2));
+//    game.launch();
+    final PuzzleBobble bobble = new PuzzleBobble(1);
+    bobble.launch();
   }
 
   public void viewPlayerProfiles() {

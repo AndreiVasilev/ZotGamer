@@ -2,8 +2,6 @@ package edu.uci.bejeweled;
 
 import edu.uci.tmge.Game;
 import edu.uci.tmge.GameEvent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -12,29 +10,19 @@ public class Bejeweled implements Game {
   private final Map<GameEvent, List<Runnable>> eventActions;
   private final BejeweledViewController viewController;
   private final BejeweledBoard board;
-  private final Stage gameWindow;
   private final String playerName;
 
-  public Bejeweled(final String playerName, final int player) {
+  public Bejeweled(final String playerName) {
     this.playerName = playerName;
-
     board = new BejeweledBoard();
-    board.initialize();
-
-    gameWindow = new Stage();
-    gameWindow.setResizable(false);
-    gameWindow.setTitle("Puzzle Bobble - Player " + player);
-    gameWindow.setOnCloseRequest(event -> quit());
-
-    viewController = new BejeweledViewController(board);
+    viewController = new BejeweledViewController(board, playerName);
     eventActions = new HashMap<>();
   }
 
   @Override
   public void launch() {
-    final Scene mainScene = new Scene(viewController);
-    gameWindow.setScene(mainScene);
-    gameWindow.show();
+    board.initialize();
+    viewController.initializeView();
 
     eventActions.getOrDefault(GameEvent.GAME_START, Collections.emptyList()).forEach(Runnable::run);
 
@@ -70,7 +58,6 @@ public class Bejeweled implements Game {
   public void quit() {
     viewController.isGameOver().set(true);
     eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
-    gameWindow.close();
   }
 
   @Override
@@ -106,19 +93,7 @@ public class Bejeweled implements Game {
     }
   }
 
-  public void setX(double x) {
-    gameWindow.setX(x);
-  }
-
-  public void setY(double y) {
-    gameWindow.setY(y);
-  }
-
-  public double getX() {
-    return gameWindow.getX();
-  }
-
-  public double getY() {
-    return gameWindow.getY();
+  public BejeweledViewController getViewController() {
+    return viewController;
   }
 }

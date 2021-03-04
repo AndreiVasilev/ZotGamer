@@ -1,5 +1,6 @@
 package edu.uci.tmge;
 
+import edu.uci.tmge.core.MultiplayerGame;
 import edu.uci.tmge.core.PlayerManager;
 
 import java.util.HashMap;
@@ -8,36 +9,43 @@ import java.util.Map;
 
 public class GameLauncher {
 
+    private final Map<String, GameWindowFactory> gameWindowFactories;
     private final Map<String, GameFactory> gameFactories;
-    private final PlayerManager manager;
+    private final PlayerManager playerManager;
 
     public GameLauncher() {
-        manager = new PlayerManager();
+        gameWindowFactories = new HashMap<>();
         gameFactories = new HashMap<>();
+        playerManager = PlayerManager.instance();
     }
 
-    public void registerGame(final String name, final GameFactory factory) {
-        gameFactories.put(name, factory);
+    public void registerGame(final String name, final GameFactory gameFactory, final GameWindowFactory windowFactory) {
+        gameFactories.put(name, gameFactory);
+        gameWindowFactories.put(name, windowFactory);
     }
 
     public void launchGame(final String name, final List<String> players) {
         if (gameFactories.containsKey(name)) {
-            final MultiplayerGame multiplayerGame = new MultiplayerGame();
+            final GameWindowFactory windowFactory = gameWindowFactories.get(name);
             final GameFactory gameFactory = gameFactories.get(name);
+            final MultiplayerGame multiplayerGame = new MultiplayerGame();
 
-            for (int i = 0; i < players.size(); ++i) {
-                final Game game = gameFactory.create(players.get(i), i + 1);
-
-                // TODO create game window interface, game window factory, add game to window, and set window positions
-
-                multiplayerGame.addGame(game);
+            for (final String player : players) {
+                final Game game = gameFactory.create(player);
+                final GameWindow gameWindow = windowFactory.create(game);
+                multiplayerGame.addGame(game, gameWindow);
             }
 
             multiplayerGame.launch();
 
-            // TODO get scores from games and save to player profiles
             multiplayerGame.addAction(GameEvent.GAME_END, () -> {
-                // manager.save();
+                final List<Game> games = multiplayerGame.getGames();
+                for (final Game game : games) {
+                    final String player = game.getPlayerName();
+                    final double score = game.getScore();
+                    playerManager.saveScore(player, game.getGameName(), score);
+                }
+                playerManager.save();
             });
         }
     }

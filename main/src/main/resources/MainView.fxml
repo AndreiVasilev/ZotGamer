@@ -8,12 +8,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" style="-fx-background-color: #333;" type="AnchorPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane layoutX="200.0" layoutY="164.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
          <bottom>
-            <Button mnemonicParsing="false" onAction="#viewPlayerProfiles" prefHeight="65.0" prefWidth="200.0" text="View Player Profiles" BorderPane.alignment="CENTER">
+            <Button mnemonicParsing="false" onAction="#viewScoreboard" prefHeight="65.0" prefWidth="200.0" text="View Scoreboard" BorderPane.alignment="CENTER">
                <font>
                   <Font size="18.0" />
                </font>

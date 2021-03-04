@@ -14,10 +14,10 @@ public class Bejeweled implements Game {
   private final List<Runnable> endOfTurnActions;
   private final List<Runnable> endOfGameActions;
   private final Stage gameWindow;
-  private final int player;
+  private final String playerName;
 
-  public Bejeweled(final int player) {
-    this.player = player;
+  public Bejeweled(final String playerName, final int player) {
+    this.playerName = playerName;
 
     board = new BejeweledBoard();
     board.initialize();
@@ -35,9 +35,7 @@ public class Bejeweled implements Game {
   @Override
   public void launch() {
     final Scene mainScene = new Scene(viewController);
-    gameWindow.setTitle("Bejeweled - Player " + player);
     gameWindow.setScene(mainScene);
-    gameWindow.setResizable(false);
     gameWindow.show();
 
     viewController.isTurnOver().addListener((observable, oldValue, turnOver) -> {
@@ -71,7 +69,12 @@ public class Bejeweled implements Game {
   }
 
   @Override
-  public String getName() {
+  public String getPlayerName() {
+    return playerName;
+  }
+
+  @Override
+  public String getGameName() {
     return "Bejeweled";
   }
 

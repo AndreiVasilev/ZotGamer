@@ -14,10 +14,10 @@ public class PuzzleBobble implements Game {
   private final List<Runnable> endOfTurnActions;
   private final List<Runnable> endOfGameActions;
   private final Stage gameWindow;
-  private final int player;
+  private final String playerName;
 
-  public PuzzleBobble(final int player) {
-    this.player = player;
+  public PuzzleBobble(final String playerName, final int player) {
+    this.playerName = playerName;
 
     board = new PuzzleBobbleBoard();
     board.initialize();
@@ -72,7 +72,12 @@ public class PuzzleBobble implements Game {
   }
 
   @Override
-  public String getName() {
+  public String getPlayerName() {
+    return playerName;
+  }
+
+  @Override
+  public String getGameName() {
     return "Puzzle Bobble";
   }
 

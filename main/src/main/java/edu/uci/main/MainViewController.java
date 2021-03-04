@@ -2,7 +2,6 @@ package edu.uci.main;
 
 import edu.uci.bejeweled.Bejeweled;
 import edu.uci.puzzlebobble.PuzzleBobble;
-import edu.uci.tmge.MultiplayerGame;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
@@ -26,7 +25,7 @@ public class MainViewController extends AnchorPane {
 //    game.addGame(new Bejeweled(1));
 //    game.addGame(new Bejeweled(2));
 //    game.launch();
-    final Bejeweled bejeweled = new Bejeweled(1);
+    final Bejeweled bejeweled = new Bejeweled("SomePlayer", 1);
     bejeweled.launch();
   }
 
@@ -35,7 +34,7 @@ public class MainViewController extends AnchorPane {
 //    game.addGame(new PuzzleBobble(1));
 //    game.addGame(new PuzzleBobble(2));
 //    game.launch();
-    final PuzzleBobble bobble = new PuzzleBobble(1);
+    final PuzzleBobble bobble = new PuzzleBobble("SomePlayer", 1);
     bobble.launch();
   }
 

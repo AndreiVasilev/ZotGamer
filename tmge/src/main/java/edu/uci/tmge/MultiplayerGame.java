@@ -18,6 +18,10 @@ public class MultiplayerGame implements Pausable, Actionable {
         games.add(game);
     }
 
+    public List<Game> getGames() {
+        return new ArrayList<>(games);
+    }
+
     public void launch() {
         for (int i = 0; i < games.size(); ++i) {
             final Game game = games.get(i);

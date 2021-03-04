@@ -12,7 +12,7 @@ public class PuzzleBobble implements Game {
   private final PuzzleBobbleBoard board;
   private final String playerName;
 
-  public PuzzleBobble(final String playerName, final int player) {
+  public PuzzleBobble(final String playerName) {
     this.playerName = playerName;
     eventActions = new HashMap<>();
     board = new PuzzleBobbleBoard();

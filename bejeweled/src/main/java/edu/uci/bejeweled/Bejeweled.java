@@ -12,7 +12,7 @@ public class Bejeweled implements Game {
   private final BejeweledBoard board;
   private final String playerName;
 
-  public Bejeweled(final String playerName, final int player) {
+  public Bejeweled(final String playerName) {
     this.playerName = playerName;
     board = new BejeweledBoard();
     viewController = new BejeweledViewController(board);

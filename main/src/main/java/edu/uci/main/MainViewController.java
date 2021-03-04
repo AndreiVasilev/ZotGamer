@@ -1,5 +1,7 @@
 package edu.uci.main;
 
+import edu.uci.bejeweled.BejeweledFactory;
+import edu.uci.bejeweled.BejeweledWindowFactory;
 import edu.uci.puzzlebobble.PuzzleBobbleFactory;
 import edu.uci.puzzlebobble.PuzzleBobbleWindowFactory;
 import edu.uci.tmge.GameLauncher;
@@ -23,7 +25,9 @@ public class MainViewController extends AnchorPane {
   }
 
   public void playBejeweled() {
-
+    final GameLauncher gameLauncher = new GameLauncher();
+    gameLauncher.registerGame("Bejeweled", new BejeweledFactory(), new BejeweledWindowFactory());
+    gameLauncher.launchGame("Bejeweled", List.of("Player 1", "Player 2"));
   }
 
   public void playPuzzleBobble() {

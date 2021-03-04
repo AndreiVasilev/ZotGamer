@@ -30,8 +30,8 @@ public class GameLauncher {
             final GameFactory gameFactory = gameFactories.get(name);
             final MultiplayerGame multiplayerGame = new MultiplayerGame();
 
-            for (int i = 0; i < players.size(); ++i) {
-                final Game game = gameFactory.create(players.get(i), i + 1);
+            for (final String player : players) {
+                final Game game = gameFactory.create(player);
                 final GameWindow gameWindow = windowFactory.create(game);
                 multiplayerGame.addGame(game, gameWindow);
             }

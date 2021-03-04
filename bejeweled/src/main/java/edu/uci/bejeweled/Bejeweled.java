@@ -65,6 +65,7 @@ public class Bejeweled implements Game {
 
   @Override
   public void quit() {
+    viewController.isGameOver().set(true);
     endOfGameActions.forEach(Runnable::run);
     gameWindow.close();
   }
@@ -77,6 +78,11 @@ public class Bejeweled implements Game {
   @Override
   public double getScore() {
     return board.getScore();
+  }
+
+  @Override
+  public boolean isOver() {
+    return viewController.isGameOver().get();
   }
 
   @Override

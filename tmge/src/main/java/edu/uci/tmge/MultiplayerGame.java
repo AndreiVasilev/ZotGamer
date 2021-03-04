@@ -21,6 +21,7 @@ public class MultiplayerGame {
         for (int i = 0; i < games.size(); ++i) {
             final Game game = games.get(i);
             game.addEndOfTurnAction(this::switchPlayers);
+            game.addEndOfGameAction(this::quit);
             game.launch();
             if (i != currentPlayer) {
                 game.pause();
@@ -38,7 +39,9 @@ public class MultiplayerGame {
 
     public void quit(){
         for (final Game game : games) {
-            game.quit();
+            if (!game.isOver()) {
+                game.quit();
+            }
         }
     }
 

@@ -1,10 +1,8 @@
 package edu.uci.puzzlebobble;
 
 import edu.uci.tmge.Game;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +66,7 @@ public class PuzzleBobble implements Game {
 
   @Override
   public void quit() {
+    viewController.isGameOver().set(true);
     endOfGameActions.forEach(Runnable::run);
     gameWindow.close();
   }
@@ -80,6 +79,11 @@ public class PuzzleBobble implements Game {
   @Override
   public double getScore() {
     return board.getScore();
+  }
+
+  @Override
+  public boolean isOver() {
+    return viewController.isGameOver().get();
   }
 
   @Override

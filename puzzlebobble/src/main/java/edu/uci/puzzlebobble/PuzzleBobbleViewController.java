@@ -29,6 +29,7 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
     private static final double NEXT_TILE_Y = 567.0;
     private final PuzzleBobbleBoard board;
     private final BooleanProperty turnOver;
+    private final BooleanProperty gameOver;
     private PuzzleBobbleTile currentTile;
     private PuzzleBobbleTile nextTile;
     private double shooterAngle;
@@ -46,6 +47,7 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
 
         this.board = board;
         turnOver = new SimpleBooleanProperty(false);
+        gameOver = new SimpleBooleanProperty(false);
         initializeBoard();
         registerMouseListeners();
         initializeShooter();
@@ -53,6 +55,10 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
 
     public BooleanProperty isTurnOver() {
         return turnOver;
+    }
+
+    public BooleanProperty isGameOver() {
+        return gameOver;
     }
 
     private void initializeBoard() {

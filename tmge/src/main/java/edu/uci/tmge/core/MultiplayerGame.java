@@ -10,14 +10,12 @@ public class MultiplayerGame implements Pausable, Actionable {
     private final List<GameWindow> gameWindows;
     private final List<Game> games;
     private int currentPlayer;
-    private boolean quit;
 
     public MultiplayerGame(){
         eventActions = new HashMap<>();
         gameWindows = new ArrayList<>();
         games = new ArrayList<>();
         currentPlayer = 0;
-        quit = false;
     }
 
     public void addGame(Game game, GameWindow gameWindow){

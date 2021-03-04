@@ -7,7 +7,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 public class MainViewController extends AnchorPane {
 
@@ -34,8 +33,11 @@ public class MainViewController extends AnchorPane {
     launchGame(GameType.PUZZLE_BOBBLE);
   }
 
-  public void viewPlayerProfiles() {
-
+  public void viewScoreboard() {
+    final Stage stage = new Stage();
+    stage.setResizable(false);
+    stage.setScene(new Scene(new ScoreBoardController()));
+    stage.show();
   }
 
   private void launchGame(final GameType gameType) {

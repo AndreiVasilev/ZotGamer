@@ -23,6 +23,8 @@ gradle-app.setting
 # OSX
 .DS_Store
 
+players.json
+
 # Package Files #
 *.jar
 *.war

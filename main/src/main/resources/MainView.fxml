@@ -12,7 +12,7 @@
    <children>
       <BorderPane layoutX="200.0" layoutY="164.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
          <bottom>
-            <Button mnemonicParsing="false" onAction="#viewPlayerProfiles" prefHeight="65.0" prefWidth="200.0" text="View Scoreboard" BorderPane.alignment="CENTER">
+            <Button mnemonicParsing="false" onAction="#viewScoreboard" prefHeight="65.0" prefWidth="200.0" text="View Scoreboard" BorderPane.alignment="CENTER">
                <font>
                   <Font size="18.0" />
                </font>

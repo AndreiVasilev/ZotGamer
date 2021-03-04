@@ -47,4 +47,14 @@ public class BejeweledWindow implements GameWindow {
   public void setScreenY(double y) {
     gameWindow.setY(y);
   }
+
+  @Override
+  public double getWidth() {
+    return gameWindow.getWidth();
+  }
+
+  @Override
+  public double getHeight() {
+    return gameWindow.getHeight();
+  }
 }

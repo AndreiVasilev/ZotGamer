@@ -7,4 +7,6 @@ public interface GameWindow {
   double getScreenY();
   void setScreenX(double x);
   void setScreenY(double y);
+  double getWidth();
+  double getHeight();
 }

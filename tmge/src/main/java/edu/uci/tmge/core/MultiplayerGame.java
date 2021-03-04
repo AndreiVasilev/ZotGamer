@@ -36,7 +36,7 @@ public class MultiplayerGame implements Pausable, Actionable {
 
             final GameWindow window = gameWindows.get(i);
             window.show();
-            window.setScreenX(window.getScreenX() - 500.0 + i * 100.0);
+            window.setScreenX(window.getScreenX() - 500.0 + i * window.getWidth());
 
             if (i != currentPlayer) {
                 game.pause();

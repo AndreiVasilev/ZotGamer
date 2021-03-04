@@ -7,6 +7,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,10 @@ public class PlayerManager {
     private PlayerManager(){
         gson = new Gson();
         players = load();
+    }
+
+    public Collection<Player> getPlayers() {
+        return players.values();
     }
 
     public Player getPlayer(final String playerName) {

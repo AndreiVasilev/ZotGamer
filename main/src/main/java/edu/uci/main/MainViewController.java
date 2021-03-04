@@ -1,9 +1,5 @@
 package edu.uci.main;
 
-import edu.uci.bejeweled.BejeweledFactory;
-import edu.uci.bejeweled.BejeweledWindowFactory;
-import edu.uci.puzzlebobble.PuzzleBobbleFactory;
-import edu.uci.puzzlebobble.PuzzleBobbleWindowFactory;
 import edu.uci.tmge.GameLauncher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -13,7 +9,9 @@ import java.util.List;
 
 public class MainViewController extends AnchorPane {
 
-  public MainViewController() {
+  private final GameLauncher gameLauncher;
+
+  public MainViewController(final GameLauncher gameLauncher) {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
     fxmlLoader.setRoot(this);
     fxmlLoader.setController(this);
@@ -22,18 +20,16 @@ public class MainViewController extends AnchorPane {
     } catch (IOException exception) {
       throw new RuntimeException(exception);
     }
+
+    this.gameLauncher = gameLauncher;
   }
 
   public void playBejeweled() {
-    final GameLauncher gameLauncher = new GameLauncher();
-    gameLauncher.registerGame("Bejeweled", new BejeweledFactory(), new BejeweledWindowFactory());
-    gameLauncher.launchGame("Bejeweled", List.of("Player 1", "Player 2"));
+    gameLauncher.launchGame(GameType.BEJEWELED.name(), List.of("Player 1", "Player 2"));
   }
 
   public void playPuzzleBobble() {
-    final GameLauncher gameLauncher = new GameLauncher();
-    gameLauncher.registerGame("Puzzle Bobble", new PuzzleBobbleFactory(), new PuzzleBobbleWindowFactory());
-    gameLauncher.launchGame("Puzzle Bobble", List.of("Player 1", "Player 2"));
+    gameLauncher.launchGame(GameType.PUZZLE_BOBBLE.name(), List.of("Player 1", "Player 2"));
   }
 
   public void viewPlayerProfiles() {

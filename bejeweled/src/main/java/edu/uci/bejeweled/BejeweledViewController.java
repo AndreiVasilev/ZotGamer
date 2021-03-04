@@ -39,18 +39,9 @@ public class BejeweledViewController extends StackPane implements Pausable {
     this.bejeweledBoard = bejeweledBoard;
     turnOver = new SimpleBooleanProperty(false);
     gameOver = new SimpleBooleanProperty(false);
-    initializeTileGrid();
   }
 
-  public BooleanProperty isTurnOver() {
-    return turnOver;
-  }
-
-  public BooleanProperty isGameOver() {
-    return gameOver;
-  }
-
-  private void initializeTileGrid() {
+  public void initializeView() {
     tileGrid.getRowConstraints().clear();
     tileGrid.getColumnConstraints().clear();
 
@@ -65,6 +56,14 @@ public class BejeweledViewController extends StackPane implements Pausable {
     }
 
     drawTileGrid();
+  }
+
+  public BooleanProperty isTurnOver() {
+    return turnOver;
+  }
+
+  public BooleanProperty isGameOver() {
+    return gameOver;
   }
 
   private void drawTileGrid() {

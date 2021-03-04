@@ -14,10 +14,7 @@ public class Bejeweled implements Game {
 
   public Bejeweled(final String playerName, final int player) {
     this.playerName = playerName;
-
     board = new BejeweledBoard();
-    board.initialize();
-
     viewController = new BejeweledViewController(board);
     eventActions = new HashMap<>();
   }
@@ -28,6 +25,9 @@ public class Bejeweled implements Game {
 
   @Override
   public void launch() {
+    board.initialize();
+    viewController.initializeView();
+
     eventActions.getOrDefault(GameEvent.GAME_START, Collections.emptyList()).forEach(Runnable::run);
 
     viewController.isTurnOver().addListener((observable, oldValue, turnOver) -> {

@@ -22,6 +22,7 @@ public class MainViewController extends AnchorPane {
     }
   }
 
+  // TODO replace with game launcher
   public void playBejeweled() {
     final MultiplayerGame game = new MultiplayerGame();
     final Bejeweled bejeweled1 = new Bejeweled("Some Player 1", 1);
@@ -40,6 +41,7 @@ public class MainViewController extends AnchorPane {
     game.launch();
   }
 
+  // TODO replace with game launcher
   public void playPuzzleBobble() {
     final MultiplayerGame game = new MultiplayerGame();
     final PuzzleBobble puzzle1 = new PuzzleBobble("Some Player 1", 1);

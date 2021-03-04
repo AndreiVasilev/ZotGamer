@@ -8,29 +8,31 @@ import java.util.Map;
 
 public class GameLauncher {
 
+    private final Map<String, GameWindowFactory> gameWindowFactories;
     private final Map<String, GameFactory> gameFactories;
-    private final PlayerManager manager;
+    private final PlayerManager playerManager;
 
     public GameLauncher() {
-        manager = new PlayerManager();
+        gameWindowFactories = new HashMap<>();
         gameFactories = new HashMap<>();
+        playerManager = new PlayerManager();
     }
 
-    public void registerGame(final String name, final GameFactory factory) {
-        gameFactories.put(name, factory);
+    public void registerGame(final String name, final GameFactory gameFactory, final GameWindowFactory windowFactory) {
+        gameFactories.put(name, gameFactory);
+        gameWindowFactories.put(name, windowFactory);
     }
 
     public void launchGame(final String name, final List<String> players) {
         if (gameFactories.containsKey(name)) {
-            final MultiplayerGame multiplayerGame = new MultiplayerGame();
+            final GameWindowFactory windowFactory = gameWindowFactories.get(name);
             final GameFactory gameFactory = gameFactories.get(name);
+            final MultiplayerGame multiplayerGame = new MultiplayerGame();
 
             for (int i = 0; i < players.size(); ++i) {
                 final Game game = gameFactory.create(players.get(i), i + 1);
-
-                // TODO create game window interface, game window factory, add game to window, and set window positions
-
-                multiplayerGame.addGame(game);
+                final GameWindow gameWindow = windowFactory.create(game);
+                multiplayerGame.addGame(game, gameWindow);
             }
 
             multiplayerGame.launch();

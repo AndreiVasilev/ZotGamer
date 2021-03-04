@@ -1,10 +1,10 @@
 package edu.uci.tmge;
 
-public interface Game extends Pausable {
+public interface Game extends Pausable, Actionable {
   void launch();
   void quit();
-  String getName();
   double getScore();
-  void addEndOfTurnAction(Runnable runnable);
-  void removeEndOfTurnAction(Runnable runnable);
+  boolean isOver();
+  String getGameName();
+  String getPlayerName();
 }

@@ -16,8 +16,8 @@ public class PuzzleBobbleBoard extends Board {
     private static final int Y_OFFSET = 20;
     private List<Tile> matches;
     private final int tileHeight;
-    private final int tileWidth;
-    private final int rowHeight;
+    private final int TILE_WIDTH;
+    private final int ROW_HEIGHT;
     private final int rowOffset;
     private final int boardWidth;
     private final int boardHeight;
@@ -28,8 +28,8 @@ public class PuzzleBobbleBoard extends Board {
         boardHeight = 620;
         boardWidth = 620;
         tileHeight = 40;
-        tileWidth = 40;
-        rowHeight = 34;
+        TILE_WIDTH = 40;
+        ROW_HEIGHT = 34;
         rowOffset = 0;
         //windowHeight and windowWidth will be calculated in the init
         //tiles does not to be instatiated bc it is called in board? correct? feel free to
@@ -202,8 +202,10 @@ public class PuzzleBobbleBoard extends Board {
 
     // TODO check to see not snapping onto non-empty tile
     public void snapTile(PuzzleBobbleTile shotTile) {
-        int row = getYGridPosition(shotTile.getVisualY());
-        int col = getXGridPosition(shotTile.getVisualX());
+        final double adjustedX = shotTile.getVisualX() + TILE_WIDTH / 2.0;
+        final double adjustedY = shotTile.getVisualY() + TILE_WIDTH / 2.0;
+        int row = getYGridPosition(adjustedY);
+        int col = getXGridPosition(adjustedX, adjustedY);
         shotTile.setVisualX(getXTileCoordinates(col, row));
         shotTile.setVisualY(getYTileCoordinates(row));
         shotTile.setX(col);
@@ -211,29 +213,29 @@ public class PuzzleBobbleBoard extends Board {
         this.tiles.get(row).set(col, shotTile);
     }
 
-    public int getXTileCoordinates(int column, int row) {
-        int tileX = column * tileWidth;
+    public double getXTileCoordinates(int column, int row) {
+        int tileX = X_OFFSET + column * TILE_WIDTH;
         if ((row + rowOffset) % 2 == 0)
-            tileX += tileWidth / 2;
-        return X_OFFSET + tileX;
+            tileX += TILE_WIDTH / 2;
+        return tileX;
     }
 
-    public int getYTileCoordinates(int row) {
-        return Y_OFFSET + row * rowHeight;
+    public double getYTileCoordinates(int row) {
+        return Y_OFFSET + row * ROW_HEIGHT;
     }
 
-    public int getXGridPosition(double x){
-        int gridY = (int) (x / rowHeight);
+    public int getXGridPosition(double x, double y){
+        final int yPos = (int) Math.floor((y - Y_OFFSET) / ROW_HEIGHT);
 
         int xOffset = 0;
-        if ((gridY + rowOffset) % 2 == 0)
-            xOffset = tileWidth/2;
+        if ((yPos + rowOffset) % 2 == 0)
+            xOffset = TILE_WIDTH / 2;
 
-        return (int) ((x - xOffset) / tileWidth);
+        return (int) Math.floor(((x - xOffset) - X_OFFSET) / TILE_WIDTH);
     }
 
     public int getYGridPosition(double y){
-        return (int) (y  / rowHeight);
+        return (int) Math.floor((y - Y_OFFSET) / ROW_HEIGHT);
     }
 
     public boolean intersecting(final PuzzleBobbleTile tile1, final PuzzleBobbleTile tile2) {

@@ -1,5 +1,6 @@
 package edu.uci.tmge;
 
+import edu.uci.tmge.core.MultiplayerGame;
 import edu.uci.tmge.core.PlayerManager;
 
 import java.util.HashMap;

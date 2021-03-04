@@ -1,9 +1,5 @@
 package edu.uci.main;
 
-import edu.uci.bejeweled.Bejeweled;
-import edu.uci.puzzlebobble.PuzzleBobble;
-import edu.uci.tmge.GameEvent;
-import edu.uci.tmge.MultiplayerGame;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 

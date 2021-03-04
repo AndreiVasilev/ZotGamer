@@ -1,4 +1,6 @@
-package edu.uci.tmge;
+package edu.uci.tmge.core;
+
+import edu.uci.tmge.*;
 
 import java.util.*;
 

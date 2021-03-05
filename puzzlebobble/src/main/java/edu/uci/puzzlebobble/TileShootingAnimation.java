@@ -57,6 +57,19 @@ public class TileShootingAnimation extends AnimationTimer {
         System.out.println("("+t.getY() + "," + t.getX() + ")");
       }
 
+      if (matchingTiles.size() >= 3){
+        board.setTilesToEmpty(matchingTiles);
+      }
+
+      ArrayList<PuzzleBobbleTile> floatingTiles = board.findFloatingTiles();
+
+      System.out.println("Floating Tiles after move: " + "("+tile.getY()+","+tile.getX()+")" );
+      for (PuzzleBobbleTile t : floatingTiles){
+        System.out.println("("+t.getY() + "," + t.getX() + ")");
+      }
+
+      board.setTilesToEmpty(floatingTiles);
+
     }
   }
 

@@ -90,6 +90,49 @@ public class PuzzleBobbleBoard extends Board {
         }
     }
 
+    public ArrayList<PuzzleBobbleTile> findFloatingTiles(){
+        int[][] isConnectedToCeiling = new int[this.height][this.width];
+        ArrayList<PuzzleBobbleTile> floatingTiles = new ArrayList<PuzzleBobbleTile>();
+
+        // iterate over rows, then each colItem in rows
+        for(int row=0; row< height; row++){
+            for (int col=0; col<width; col++){
+                PuzzleBobbleTile curTile = (PuzzleBobbleTile) tiles.get(row).get(col);
+
+                if(curTile.getType() == -1){
+                    // we do not care about processing empty tiles
+                    continue;
+                }
+
+                if( isConnectedToCeiling[row][col] != 1 ){
+                    // find all tiles attached to curTile
+                    ArrayList<PuzzleBobbleTile> neighbors = getNeighbors(curTile);
+
+                    boolean isFloating = true;
+                    for (PuzzleBobbleTile t : neighbors){
+                        // if tile is attached to the ceiling
+                        if (t.getY() == 0 || (isConnectedToCeiling[t.getY()][t.getX()] == 1) ){
+                            // then the rest of the neighbors are not floating
+                            isFloating = false;
+                            break;
+                        }
+                    }
+                    // if the entire neighbors set are not attached to the ceiling
+                    if(isFloating){
+                        floatingTiles.addAll(neighbors);
+                    }
+                    else{
+                        for (PuzzleBobbleTile t : neighbors){
+                            isConnectedToCeiling[t.getY()][t.getX()] = 1;
+                        }
+                    }
+                } // endif curTile has been visited
+            }
+        } // endfor iterated all rows
+
+        return floatingTiles;
+    }
+
     // breath first search for neighboring matching tiles
     public ArrayList<PuzzleBobbleTile> findGroups(PuzzleBobbleTile startingTile) {
         // initialize a 2D array to check if visited each cell
@@ -152,7 +195,7 @@ public class PuzzleBobbleBoard extends Board {
 
             // Ensure the neighbor tile is within bounds of the board
             // before storing as a neighbor
-            if (nbX >= 0 && nbX < width && nbY >= 0 && nbY < height){
+            if (nbX >= 0 && nbX < width && nbY >= 0 && nbY < height && tiles.get(nbY).get(nbX).getType() != -1 ){
                 neighbors.add( (PuzzleBobbleTile)tiles.get(nbY).get(nbX) );
             }
         }

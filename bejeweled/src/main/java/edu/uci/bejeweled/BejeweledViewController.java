@@ -45,7 +45,7 @@ public class BejeweledViewController extends StackPane implements Pausable {
   public void initializeView() {
     tileGrid.getRowConstraints().clear();
     tileGrid.getColumnConstraints().clear();
-
+    scoreLabel.setText(Integer.toString((int)bejeweledBoard.getScore()));
     for (int i = 0; i < bejeweledBoard.getHeight(); ++i) {
       final RowConstraints row = new RowConstraints(65);
       tileGrid.getRowConstraints().add(row);
@@ -110,6 +110,7 @@ public class BejeweledViewController extends StackPane implements Pausable {
                     stop();
                     turnOver.set(true);
                     bejeweledBoard.resetSelectedTile();
+                    scoreLabel.setText(Integer.toString((int)bejeweledBoard.getScore()));
                   }
                 }
               };

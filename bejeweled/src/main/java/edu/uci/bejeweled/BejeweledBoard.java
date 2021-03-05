@@ -130,7 +130,7 @@ public class BejeweledBoard extends Board {
     public double calculateScore(List<Map<String, Integer>> matches){
         double score = 0;
         for (final Map<String, Integer> match : matches){
-            score += 100*match.get("length")-2;
+            score += 100*(match.get("length")-2);
         }
         return score;
     }
@@ -149,7 +149,7 @@ public class BejeweledBoard extends Board {
     public void removeTiles() {
         List<Map<String, Integer>> matches = findMatches();
         if(gameState){
-            this.setScore(calculateScore(matches));
+            this.setScore(this.getScore()+calculateScore(matches));
         }
         for (final Map<String, Integer> match : matches) {
             int matchLen = match.get("length");

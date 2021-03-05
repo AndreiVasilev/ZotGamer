@@ -84,7 +84,7 @@ public class PuzzleBobbleBoard extends Board {
             .collect(Collectors.toList());
     }
 
-    public void setTilesToEmpty(ArrayList<PuzzleBobbleTile> arrOfTiles){
+    public void setTilesToEmpty(List<PuzzleBobbleTile> arrOfTiles){
         for (PuzzleBobbleTile tile: arrOfTiles){
             tile.setType(-1);
         }
@@ -93,7 +93,7 @@ public class PuzzleBobbleBoard extends Board {
     // breath first search for neighboring matching tiles
     public ArrayList<PuzzleBobbleTile> findGroups(PuzzleBobbleTile startingTile) {
         // initialize a 2D array to check if visited each cell
-        int[][] visited = new int[this.height][this.width];
+        boolean[][] visited = new boolean[this.height][this.width];
 
         // initializing queue that'll hold neighbors of the same .type to further inspect
         LinkedList<PuzzleBobbleTile> queueOfTilesToProcess = new LinkedList<PuzzleBobbleTile>();
@@ -108,37 +108,36 @@ public class PuzzleBobbleBoard extends Board {
             PuzzleBobbleTile curTile = queueOfTilesToProcess.remove();
 
             // skip current Tile if it is empty OR has been visited
-            if (curTile.getType() == -1 || visited[curTile.getY()][curTile.getX()] == 1) {
+            if (visited[curTile.getY()][curTile.getX()]) {
                 continue;
             }
 
-            // if current tile has the same color type as the startingTile
-            if (curTile.getType() == startingTile.getType()){
-                matchingGroups.add(curTile);
+            matchingGroups.add(curTile);
 
-                ArrayList<PuzzleBobbleTile> neighbors = getNeighbors(curTile);
+            ArrayList<PuzzleBobbleTile> neighbors = getNeighbors(curTile);
 
-                for(PuzzleBobbleTile t : neighbors){
-                    // if a neighbor has not been visited of the currentTile
-                    if (visited[t.getY()][t.getX()] != 1){
-                        // then add to queue to process it's color and further neighbors
-                        queueOfTilesToProcess.add(t);
-                    }
+            for(PuzzleBobbleTile neighbor : neighbors){
+                // if a neighbor has not been visited of the currentTile
+                if (neighbor.getType() == startingTile.getType() && !visited[neighbor.getY()][neighbor.getX()]){
+                    // then add to queue to process it's color and further neighbors
+                    queueOfTilesToProcess.add(neighbor);
                 }
             }
+
             // set the current Tile as 'true' in visited array
-            visited[curTile.getY()][curTile.getX()] = 1;
+            visited[curTile.getY()][curTile.getX()] = true;
         }
 
         return matchingGroups;
     }
+
     private ArrayList<PuzzleBobbleTile> getNeighbors(PuzzleBobbleTile aTile){
         // Neighbor offset tables
         int[][][] neighborOffsets = {
-                // Even row offsets
-                {{1, 0}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}},
-                // Odd row offsets
-                {{1, 0}, {1, 1}, {0, 1}, {-1, 0}, {0, -1}, {1, -1}}
+                // Event row offsets
+                {{1, 0}, {1, 1}, {0, 1}, {-1, 0}, {0, -1}, {-1, 1}},
+                /// Odd row offsets
+                {{1, 0}, {0, 1}, {1, -1}, {-1, 0}, {-1, -1}, {0, -1}},
         };
 
         int[][] correspondingOffsets = neighborOffsets[ aTile.getY() % 2 ];
@@ -147,8 +146,8 @@ public class PuzzleBobbleBoard extends Board {
 
         for (int i = 0; i < correspondingOffsets.length; i++){
             // a neighbor's coordinates
-            int nbX = aTile.getX() + correspondingOffsets[i][0];
-            int nbY = aTile.getY() + correspondingOffsets[i][1];
+            int nbY = aTile.getY() + correspondingOffsets[i][0];
+            int nbX = aTile.getX() + correspondingOffsets[i][1];
 
             // Ensure the neighbor tile is within bounds of the board
             // before storing as a neighbor

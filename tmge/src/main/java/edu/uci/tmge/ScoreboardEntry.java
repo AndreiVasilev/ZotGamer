@@ -20,6 +20,6 @@ public class ScoreboardEntry implements Comparable<ScoreboardEntry> {
 
   @Override
   public int compareTo(ScoreboardEntry o) {
-    return Double.compare(score, o.score);
+    return Double.compare(o.score, score);
   }
 }

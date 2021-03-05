@@ -6,6 +6,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList; //TODO: Can be deleted later if not need to iterate over matching tiles
+import java.util.List;
 
 public class TileShootingAnimation extends AnimationTimer {
 
@@ -46,30 +47,15 @@ public class TileShootingAnimation extends AnimationTimer {
 
     // TODO check for collisions with other tiles, not just top of board
     if (board.isCollided(tile)) {
-      stop();
-      stopped.set(true);
 
-      System.out.println("New Move Done. Bobble Snapped Into: " + "("+tile.getY()+","+tile.getX()+")" );
+      final List<PuzzleBobbleTile> matchingTiles = board.findGroups(tile);
 
-      ArrayList<PuzzleBobbleTile> matchingTiles = board.findGroups(tile);
-
-      for (PuzzleBobbleTile t : matchingTiles){
-        System.out.println("("+t.getY() + "," + t.getX() + ")");
-      }
-
-      if (matchingTiles.size() >= 3){
+      if (matchingTiles.size() > 2) {
         board.setTilesToEmpty(matchingTiles);
       }
 
-      ArrayList<PuzzleBobbleTile> floatingTiles = board.findFloatingTiles();
-
-      System.out.println("Floating Tiles after move: " + "("+tile.getY()+","+tile.getX()+")" );
-      for (PuzzleBobbleTile t : floatingTiles){
-        System.out.println("("+t.getY() + "," + t.getX() + ")");
-      }
-
-      board.setTilesToEmpty(floatingTiles);
-
+      stop();
+      stopped.set(true);
     }
   }
 

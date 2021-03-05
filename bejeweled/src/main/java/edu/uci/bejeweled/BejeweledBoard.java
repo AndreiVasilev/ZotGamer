@@ -13,7 +13,7 @@ public class BejeweledBoard extends Board {
     //false if board not initialized, true if game has started
     private boolean gameState =  false;
 
-    private int state = 0;
+    private BejeweledGameState state = BejeweledGameState.REMOVE_TILE;
     private int counter = 0;
 
     public BejeweledBoard(){
@@ -58,13 +58,18 @@ public class BejeweledBoard extends Board {
             counter = (counter + 1) % 50;
             return;
         }
-        if (state == 0)
+        if (state == BejeweledGameState.REMOVE_TILE) {
             removeTiles();
-        else if (state == 1)
+            state = BejeweledGameState.SHIFT_TILE;
+        }
+        else if (state == BejeweledGameState.SHIFT_TILE) {
             shiftTiles();
-        else
+            state = BejeweledGameState.FILL_EMPTY_TILE;
+        }
+        else {
             fillEmptyTiles();
-        state = (state + 1) % 3;
+            state = BejeweledGameState.REMOVE_TILE;
+        }
         ++counter;
     }
 

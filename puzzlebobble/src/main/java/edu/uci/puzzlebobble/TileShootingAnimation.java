@@ -54,6 +54,9 @@ public class TileShootingAnimation extends AnimationTimer {
         board.setTilesToEmpty(matchingTiles);
       }
 
+      final List<PuzzleBobbleTile> floatingTiles = board.findFloatingTiles();
+      board.setTilesToEmpty(floatingTiles);
+
       stop();
       stopped.set(true);
     }

@@ -75,49 +75,29 @@ public class BejeweledViewController extends StackPane implements Pausable {
       tile.getVisualTile().setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-          if (bejeweledBoard.getSelectedTile().isPresent()) {
-            final BejeweledTile selected = bejeweledBoard.getSelectedTile().get();
+          final AnimationTimer animationTimer = new AnimationTimer() {
 
-            if (bejeweledBoard.canSwap(selected, tile)) {
-              bejeweledBoard.swapTiles(selected, tile);
 
-              if (!bejeweledBoard.hasMatches()) {
-                bejeweledBoard.swapTiles(selected, tile);
+            @Override
+            public void handle(long now) {
+              if(bejeweledBoard.hasMatches()) {
+                bejeweledBoard.postMoveUpdate();
+                drawTileGrid();
+              } else {
+                stop();
+                turnOver.set(true);
+                bejeweledBoard.resetSelectedTile();
+                scoreLabel.setText(Integer.toString((int)bejeweledBoard.getScore()));
               }
-
-              final AnimationTimer animationTimer = new AnimationTimer() {
-
-                private int state = 0;
-                private int counter = 0;
-
-                @Override
-                public void handle(long now) {
-                  if(bejeweledBoard.hasMatches()) {
-                    if (counter != 0) {
-                      counter = (counter + 1) % 50;
-                      return;
-                    }
-                    if (state == 0)
-                      bejeweledBoard.removeTiles();
-                    else if (state == 1)
-                      bejeweledBoard.shiftTiles();
-                    else
-                      bejeweledBoard.fillEmptyTiles();
-                    state = (state + 1) % 3;
-                    ++counter;
-                    drawTileGrid();
-                  } else {
-                    stop();
-                    turnOver.set(true);
-                    bejeweledBoard.resetSelectedTile();
-                    scoreLabel.setText(Integer.toString((int)bejeweledBoard.getScore()));
-                  }
-                }
-              };
-
-              animationTimer.start();
-              return;
             }
+          };
+
+          if (bejeweledBoard.getSelectedTile().isPresent()) {
+            bejeweledBoard.handleSwap(tile);
+
+            animationTimer.start();
+            return;
+
           }
 
           bejeweledBoard.resetSelectedTile();

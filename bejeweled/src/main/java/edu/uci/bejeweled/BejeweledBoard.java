@@ -13,6 +13,9 @@ public class BejeweledBoard extends Board {
     //false if board not initialized, true if game has started
     private boolean gameState =  false;
 
+    private BejeweledGameState state = BejeweledGameState.REMOVE_TILE;
+    private int counter = 0;
+
     public BejeweledBoard(){
         super(8, 8);
         selectedTile = null;
@@ -38,6 +41,36 @@ public class BejeweledBoard extends Board {
             selectedTile.unselect(); // Returns selected tile color to normal
         }
         selectedTile = null;
+    }
+
+    public void handleSwap(Tile tile) {
+        if (canSwap(selectedTile, tile)) {
+            swapTiles(selectedTile, tile);
+        }
+
+        if (!hasMatches()) {
+            swapTiles(selectedTile, tile);
+        }
+    }
+
+    public void postMoveUpdate() {
+        if (counter != 0) {
+            counter = (counter + 1) % 50;
+            return;
+        }
+        if (state == BejeweledGameState.REMOVE_TILE) {
+            removeTiles();
+            state = BejeweledGameState.SHIFT_TILE;
+        }
+        else if (state == BejeweledGameState.SHIFT_TILE) {
+            shiftTiles();
+            state = BejeweledGameState.FILL_EMPTY_TILE;
+        }
+        else {
+            fillEmptyTiles();
+            state = BejeweledGameState.REMOVE_TILE;
+        }
+        ++counter;
     }
 
     @Override

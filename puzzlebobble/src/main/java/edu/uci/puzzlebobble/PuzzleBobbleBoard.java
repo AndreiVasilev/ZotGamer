@@ -90,47 +90,34 @@ public class PuzzleBobbleBoard extends Board {
         }
     }
 
-    public ArrayList<PuzzleBobbleTile> findFloatingTiles(){
-        int[][] isConnectedToCeiling = new int[this.height][this.width];
-        ArrayList<PuzzleBobbleTile> floatingTiles = new ArrayList<PuzzleBobbleTile>();
+    public List<PuzzleBobbleTile> findFloatingTiles(){
+        final Queue<PuzzleBobbleTile> tilesToCheck = new LinkedList<>();
+        boolean[][] visited = new boolean[this.height][this.width];
 
-        // iterate over rows, then each colItem in rows
-        for(int row=0; row< height; row++){
-            for (int col=0; col<width; col++){
-                PuzzleBobbleTile curTile = (PuzzleBobbleTile) tiles.get(row).get(col);
-
-                if(curTile.getType() == -1){
-                    // we do not care about processing empty tiles
-                    continue;
-                }
-
-                if( isConnectedToCeiling[row][col] != 1 ){
-                    // find all tiles attached to curTile
-                    ArrayList<PuzzleBobbleTile> neighbors = getNeighbors(curTile);
-
-                    boolean isFloating = true;
-                    for (PuzzleBobbleTile t : neighbors){
-                        // if tile is attached to the ceiling
-                        if (t.getY() == 0 || (isConnectedToCeiling[t.getY()][t.getX()] == 1) ){
-                            // then the rest of the neighbors are not floating
-                            isFloating = false;
-                            break;
-                        }
-                    }
-                    // if the entire neighbors set are not attached to the ceiling
-                    if(isFloating){
-                        floatingTiles.addAll(neighbors);
-                    }
-                    else{
-                        for (PuzzleBobbleTile t : neighbors){
-                            isConnectedToCeiling[t.getY()][t.getX()] = 1;
-                        }
-                    }
-                } // endif curTile has been visited
+        // Find starting point for search
+        for (final Tile tile : tiles.get(0)) {
+            if (tile.getType() != -1) {
+                tilesToCheck.add((PuzzleBobbleTile) tile);
+                visited[tile.getY()][tile.getX()] = true;
             }
-        } // endfor iterated all rows
+        }
 
-        return floatingTiles;
+        // Breadth first search tiles connected to starting point
+        while (!tilesToCheck.isEmpty()) {
+            final PuzzleBobbleTile tile = tilesToCheck.remove();
+            final List<PuzzleBobbleTile> neighbors = getNeighbors(tile);
+            for (final PuzzleBobbleTile neighbor : neighbors) {
+                if (neighbor.getType() != -1 && !visited[neighbor.getY()][neighbor.getX()]) {
+                    visited[neighbor.getY()][neighbor.getX()] = true;
+                    tilesToCheck.add(neighbor);
+                }
+            }
+        }
+
+        // Any tiles not reachable from starting point are floating
+        return getTiles().stream()
+            .filter(tile -> tile.getType() != -1 && !visited[tile.getY()][tile.getX()])
+            .collect(Collectors.toList());
     }
 
     // breath first search for neighboring matching tiles

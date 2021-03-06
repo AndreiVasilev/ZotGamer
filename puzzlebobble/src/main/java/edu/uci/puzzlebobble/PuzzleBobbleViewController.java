@@ -76,12 +76,8 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
     }
 
     private void initializeShooter() {
-        // TODO probably get from board? createTile()?
         currentTile = new PuzzleBobbleTile((int) (Math.random() * 7));
         nextTile = new PuzzleBobbleTile((int) (Math.random() * 7));
-
-        // TODO need to link this with board. After a tile has been shot, matches will be checked, and all
-        //  tiles that have matched must be removed from this node pane so that they no longer appear on screen
         tilePane.getChildren().addAll(currentTile.getVisualTile(), nextTile.getVisualTile());
 
         // Position of tiles must be set AFTER they are added to UI canvas

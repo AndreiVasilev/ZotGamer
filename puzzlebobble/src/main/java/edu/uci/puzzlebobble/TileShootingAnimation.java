@@ -35,7 +35,6 @@ public class TileShootingAnimation extends AnimationTimer {
     tile.setVisualX(tile.getVisualX() + deltaX);
     tile.setVisualY(tile.getVisualY() + deltaY);
 
-    // TODO use board dimensions for checking collisions with edges
     if (tile.getVisualX() - tile.getRadius() <= 0.0 ||
         tile.getVisualX() + tile.getRadius() >= board.getVisualWidth())
     {
@@ -44,7 +43,6 @@ public class TileShootingAnimation extends AnimationTimer {
       deltaY = getDeltaY();
     }
 
-    // TODO check for collisions with other tiles, not just top of board
     if (board.isCollided(tile)) {
       board.removeMatches();
       stop();

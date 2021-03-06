@@ -11,7 +11,6 @@ import java.util.LinkedList;
 
 public class PuzzleBobbleBoard extends Board {
 
-    //change to PBtile
     private static final int X_OFFSET = 20;
     private static final int Y_OFFSET = 20;
     private final int TILE_DIAMETER;
@@ -22,15 +21,12 @@ public class PuzzleBobbleBoard extends Board {
     private PuzzleBobbleTile currentShotTile;
 
     public PuzzleBobbleBoard(){
-        super(15,14 ); //will be calculated later
+        super(15,14 );
         VISUAL_HEIGHT = 620;
         VISUAL_WIDTH = 620;
         TILE_DIAMETER = 40;
         ROW_HEIGHT = 34;
         rowOffset = 0;
-        //windowHeight and windowWidth will be calculated in the init
-        //tiles does not to be instatiated bc it is called in board? correct? feel free to
-        //ping me on disc bc Id like to learn, you can del afterwards- car
     }
 
     public int getVisualWidth() {
@@ -90,23 +86,19 @@ public class PuzzleBobbleBoard extends Board {
         return false;
     }
 
-    public boolean hasValidMoves() {
-        return  false;
-    }
-
     public Collection<PuzzleBobbleTile> getTiles() {
         return tiles.stream().flatMap(Collection::stream)
             .map(tile -> (PuzzleBobbleTile)tile)
             .collect(Collectors.toList());
     }
 
-    public void setTilesToEmpty(List<PuzzleBobbleTile> arrOfTiles){
+    private void setTilesToEmpty(List<PuzzleBobbleTile> arrOfTiles){
         for (PuzzleBobbleTile tile: arrOfTiles){
             tile.setType(-1);
         }
     }
 
-    public List<PuzzleBobbleTile> findFloatingTiles(){
+    private List<PuzzleBobbleTile> findFloatingTiles(){
         final Queue<PuzzleBobbleTile> tilesToCheck = new LinkedList<>();
         boolean[][] visited = new boolean[this.height][this.width];
 
@@ -137,7 +129,7 @@ public class PuzzleBobbleBoard extends Board {
     }
 
     // breath first search for neighboring matching tiles
-    public ArrayList<PuzzleBobbleTile> findGroups(PuzzleBobbleTile startingTile) {
+    private ArrayList<PuzzleBobbleTile> findGroups(PuzzleBobbleTile startingTile) {
         // initialize a 2D array to check if visited each cell
         boolean[][] visited = new boolean[this.height][this.width];
 
@@ -249,7 +241,7 @@ public class PuzzleBobbleBoard extends Board {
     }
 
     // TODO check to see not snapping onto non-empty tile
-    public void snapTile(PuzzleBobbleTile shotTile) {
+    private void snapTile(PuzzleBobbleTile shotTile) {
         final double adjustedX = shotTile.getVisualX() + shotTile.getRadius();
         final double adjustedY = shotTile.getVisualY() + shotTile.getRadius();
         int row = getYGridPosition(adjustedY);
@@ -272,7 +264,7 @@ public class PuzzleBobbleBoard extends Board {
         return Y_OFFSET + row * ROW_HEIGHT;
     }
 
-    public int getXGridPosition(double x, double y){
+    private int getXGridPosition(double x, double y){
         final int yPos = (int) Math.floor((y - Y_OFFSET) / ROW_HEIGHT);
 
         int xOffset = 0;
@@ -282,11 +274,11 @@ public class PuzzleBobbleBoard extends Board {
         return (int) Math.floor(((x - xOffset) - X_OFFSET) / TILE_DIAMETER);
     }
 
-    public int getYGridPosition(double y){
+    private int getYGridPosition(double y){
         return (int) Math.floor((y - Y_OFFSET) / ROW_HEIGHT);
     }
 
-    public boolean intersecting(final PuzzleBobbleTile tile1, final PuzzleBobbleTile tile2) {
+    private boolean intersecting(final PuzzleBobbleTile tile1, final PuzzleBobbleTile tile2) {
         final double dx = tile1.getVisualX() - tile2.getVisualX();
         final double dy = tile1.getVisualY() - tile2.getVisualY();
         final double dist = Math.sqrt(dx * dx + dy * dy);

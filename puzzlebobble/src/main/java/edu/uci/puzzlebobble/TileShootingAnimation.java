@@ -47,18 +47,10 @@ public class TileShootingAnimation extends AnimationTimer {
 
     // TODO check for collisions with other tiles, not just top of board
     if (board.isCollided(tile)) {
-
-      final List<PuzzleBobbleTile> matchingTiles = board.findGroups(tile);
-
-      if (matchingTiles.size() > 2) {
-        board.setTilesToEmpty(matchingTiles);
-      }
-
-      final List<PuzzleBobbleTile> floatingTiles = board.findFloatingTiles();
-      board.setTilesToEmpty(floatingTiles);
-
+      board.removeMatches();
       stop();
       stopped.set(true);
+      // is Game Over ??
     }
   }
 

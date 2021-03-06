@@ -8,12 +8,16 @@ import java.util.stream.Collectors;
 
 public class BejeweledBoard extends Board {
 
-    private final List<Map<String, Integer>> matches;
     private BejeweledTile selectedTile;
+
+    //false if board not initialized, true if game has started
+    private boolean gameState =  false;
+
+    private BejeweledGameState state = BejeweledGameState.REMOVE_TILE;
+    private int counter = 0;
 
     public BejeweledBoard(){
         super(8, 8);
-        this.matches = new ArrayList<>();
         selectedTile = null;
     }
 
@@ -39,6 +43,36 @@ public class BejeweledBoard extends Board {
         selectedTile = null;
     }
 
+    public void handleSwap(Tile tile) {
+        if (canSwap(selectedTile, tile)) {
+            swapTiles(selectedTile, tile);
+        }
+
+        if (!hasMatches()) {
+            swapTiles(selectedTile, tile);
+        }
+    }
+
+    public void postMoveUpdate() {
+        if (counter != 0) {
+            counter = (counter + 1) % 50;
+            return;
+        }
+        if (state == BejeweledGameState.REMOVE_TILE) {
+            removeTiles();
+            state = BejeweledGameState.SHIFT_TILE;
+        }
+        else if (state == BejeweledGameState.SHIFT_TILE) {
+            shiftTiles();
+            state = BejeweledGameState.FILL_EMPTY_TILE;
+        }
+        else {
+            fillEmptyTiles();
+            state = BejeweledGameState.REMOVE_TILE;
+        }
+        ++counter;
+    }
+
     @Override
     public void initialize() {
         for (int row = 0; row < height; row++) {
@@ -49,10 +83,11 @@ public class BejeweledBoard extends Board {
         }
 
         setupBoard();
+        this.gameState = true;
     }
 
-    public void findMatches() {
-        this.matches.clear();
+    public List<Map<String, Integer>> findMatches() {
+        List<Map<String, Integer>> matches = new ArrayList<>();
         int totalMatches = 0;
         //horizontal
         for(int row = 0; row < height; row++) {
@@ -116,12 +151,21 @@ public class BejeweledBoard extends Board {
 
             }
         }
+        return matches;
     }
 
     @Override
     public boolean hasMatches() {
-        findMatches();
+        List<Map<String, Integer>> matches = findMatches();
         return !matches.isEmpty();
+    }
+
+    public double calculateScore(List<Map<String, Integer>> matches){
+        double score = 0;
+        for (final Map<String, Integer> match : matches){
+            score += 100*(match.get("length")-2);
+        }
+        return score;
     }
 
     //TODO: finish removeMatches
@@ -136,7 +180,11 @@ public class BejeweledBoard extends Board {
 
     //Finds all matches in the board and sets it to 0
     public void removeTiles() {
-        for (final Map<String, Integer> match : this.matches) {
+        List<Map<String, Integer>> matches = findMatches();
+        if(gameState){
+            this.setScore(this.getScore()+calculateScore(matches));
+        }
+        for (final Map<String, Integer> match : matches) {
             int matchLen = match.get("length");
             int row = match.get("row");
             int col = match.get("col");
@@ -151,6 +199,7 @@ public class BejeweledBoard extends Board {
             }
         }
     }
+
 
     @Override
     public boolean isGameOver() {
@@ -168,7 +217,8 @@ public class BejeweledBoard extends Board {
     }
 
     public void shiftTiles() {
-        for (final Map<String, Integer> match : this.matches) {
+        List<Map<String, Integer>> matches = findMatches();
+        for (final Map<String, Integer> match : matches) {
             int matchLen = match.get("length");
             int row = match.get("row");
             int col = match.get("col");

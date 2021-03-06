@@ -14,20 +14,18 @@ public class PuzzleBobbleBoard extends Board {
     //change to PBtile
     private static final int X_OFFSET = 20;
     private static final int Y_OFFSET = 20;
-    private final int TILE_HEIGHT;
-    private final int TILE_WIDTH;
+    private final int TILE_DIAMETER;
     private final int ROW_HEIGHT;
-    private final int rowOffset;
     private final int VISUAL_WIDTH;
     private final int VISUAL_HEIGHT;
+    private final int rowOffset;
     private PuzzleBobbleTile currentShotTile;
 
     public PuzzleBobbleBoard(){
         super(15,14 ); //will be calculated later
         VISUAL_HEIGHT = 620;
         VISUAL_WIDTH = 620;
-        TILE_HEIGHT = 40;
-        TILE_WIDTH = 40;
+        TILE_DIAMETER = 40;
         ROW_HEIGHT = 34;
         rowOffset = 0;
         //windowHeight and windowWidth will be calculated in the init
@@ -48,7 +46,7 @@ public class PuzzleBobbleBoard extends Board {
         for (int row = 0; row < height; row++) {
             tiles.add(new ArrayList<>());
             for (int col = 0; col < width; col++) {
-                tiles.get(row).add(new PuzzleBobbleTile(col, row, 0, 0));
+                tiles.get(row).add(new PuzzleBobbleTile(col, row, 0));
             }
         }
         setupBoard();
@@ -192,15 +190,16 @@ public class PuzzleBobbleBoard extends Board {
 
         ArrayList<PuzzleBobbleTile> neighbors = new ArrayList<PuzzleBobbleTile>();
 
-        for (int i = 0; i < correspondingOffsets.length; i++){
+        for (int[] correspondingOffset : correspondingOffsets) {
             // a neighbor's coordinates
-            int nbY = aTile.getY() + correspondingOffsets[i][0];
-            int nbX = aTile.getX() + correspondingOffsets[i][1];
+            int nbY = aTile.getY() + correspondingOffset[0];
+            int nbX = aTile.getX() + correspondingOffset[1];
 
             // Ensure the neighbor tile is within bounds of the board
             // before storing as a neighbor
-            if (nbX >= 0 && nbX < width && nbY >= 0 && nbY < height && tiles.get(nbY).get(nbX).getType() != -1 ){
-                neighbors.add( (PuzzleBobbleTile)tiles.get(nbY).get(nbX) );
+            if (nbX >= 0 && nbX < width && nbY >= 0 && nbY < height
+                && tiles.get(nbY).get(nbX).getType() != -1) {
+                neighbors.add((PuzzleBobbleTile) tiles.get(nbY).get(nbX));
             }
         }
         return neighbors;
@@ -251,8 +250,8 @@ public class PuzzleBobbleBoard extends Board {
 
     // TODO check to see not snapping onto non-empty tile
     public void snapTile(PuzzleBobbleTile shotTile) {
-        final double adjustedX = shotTile.getVisualX() + TILE_WIDTH / 2.0;
-        final double adjustedY = shotTile.getVisualY() + TILE_WIDTH / 2.0;
+        final double adjustedX = shotTile.getVisualX() + shotTile.getRadius();
+        final double adjustedY = shotTile.getVisualY() + shotTile.getRadius();
         int row = getYGridPosition(adjustedY);
         int col = getXGridPosition(adjustedX, adjustedY);
         shotTile.setVisualX(getXTileCoordinates(col, row));
@@ -263,9 +262,9 @@ public class PuzzleBobbleBoard extends Board {
     }
 
     public double getXTileCoordinates(int column, int row) {
-        int tileX = X_OFFSET + column * TILE_WIDTH;
+        int tileX = X_OFFSET + column * TILE_DIAMETER;
         if ((row + rowOffset) % 2 == 0)
-            tileX += TILE_WIDTH / 2;
+            tileX += TILE_DIAMETER / 2;
         return tileX;
     }
 
@@ -278,9 +277,9 @@ public class PuzzleBobbleBoard extends Board {
 
         int xOffset = 0;
         if ((yPos + rowOffset) % 2 == 0)
-            xOffset = TILE_WIDTH / 2;
+            xOffset = TILE_DIAMETER / 2;
 
-        return (int) Math.floor(((x - xOffset) - X_OFFSET) / TILE_WIDTH);
+        return (int) Math.floor(((x - xOffset) - X_OFFSET) / TILE_DIAMETER);
     }
 
     public int getYGridPosition(double y){

@@ -16,9 +16,11 @@ import java.util.Collection;
 
 public class PuzzleBobbleViewController extends StackPane implements Pausable {
 
+    @FXML private AnchorPane gameOverScreen;
     @FXML private AnchorPane pauseScreen;
     @FXML private Line shooterLine;
     @FXML private Pane tilePane;
+    @FXML private Label finalScore;
     @FXML private Label score;
     private static final double SHOOTER_LINE_LENGTH = 57.0;
     private static final double SHOOT_TILE_START_X = 310.0;
@@ -102,10 +104,14 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
                 final TileShootingAnimation shootingAnimation = new TileShootingAnimation(board, currentTile, shooterAngle);
                 shootingAnimation.start();
                 shootingAnimation.stoppedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (board.isGameOver()) {
+                        gameOverScreen.setVisible(true);
+                        tilePane.setDisable(true);
+                        finalScore.setText("Final Score : " + board.getScore());
+                        gameOver.set(true);
+                    }
+
                     isShooting = false;
-                    // TODO: if( isGameOver() ){ disable screen, show gameover}
-                    // TODO: groups = findGroups()
-                    // TODO: if (groups.size() >= 3) { remove the arraylist of tiles}
                     swapTiles();
                     turnOver.set(true);
                 });

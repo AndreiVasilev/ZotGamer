@@ -34,24 +34,22 @@ public class PuzzleBobble implements Game {
         eventActions.get(GameEvent.TURN_START).forEach(Runnable::run);
       }
     });
-
-    viewController.isGameOver().addListener(((observable, oldValue, gameOver) -> {
-      if (gameOver) {
-        quit();
-      }
-    }));
   }
 
   @Override
   public void pause() {
-    viewController.pause();
-    eventActions.getOrDefault(GameEvent.GAME_PAUSE, Collections.emptyList()).forEach(Runnable::run);
+    if (!isOver()) {
+      viewController.pause();
+      eventActions.getOrDefault(GameEvent.GAME_PAUSE, Collections.emptyList()).forEach(Runnable::run);
+    }
   }
 
   @Override
   public void resume() {
-    viewController.resume();
-    eventActions.getOrDefault(GameEvent.GAME_RESUME, Collections.emptyList()).forEach(Runnable::run);
+    if (!isOver()) {
+      viewController.resume();
+      eventActions.getOrDefault(GameEvent.GAME_RESUME, Collections.emptyList()).forEach(Runnable::run);
+    }
   }
 
   @Override

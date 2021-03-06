@@ -65,15 +65,29 @@ public class MultiplayerGame implements Pausable, Actionable {
             }
         }
 
+        for (final GameWindow window : gameWindows) {
+            if (window.isShowing()) {
+                window.close();
+            }
+        }
+
         if (games.stream().allMatch(Game::isOver)) {
             eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
         }
     }
 
     public void switchPlayers(){
+        final int player = currentPlayer;
         games.get(currentPlayer).pause();
-        currentPlayer = (currentPlayer + 1) % games.size();
-        games.get(currentPlayer).resume();
+        currentPlayer = getNextPlayer();
+
+        while (currentPlayer != player) {
+            if (!games.get(currentPlayer).isOver()) {
+                games.get(currentPlayer).resume();
+                break;
+            }
+            currentPlayer = getNextPlayer();
+        }
     }
 
     @Override
@@ -87,5 +101,9 @@ public class MultiplayerGame implements Pausable, Actionable {
         if (eventActions.containsKey(event)) {
             eventActions.get(event).remove(action);
         }
+    }
+
+    private int getNextPlayer() {
+        return (currentPlayer + 1) % games.size();
     }
 }

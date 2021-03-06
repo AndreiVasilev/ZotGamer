@@ -14,20 +14,19 @@ public class PuzzleBobbleBoard extends Board {
     //change to PBtile
     private static final int X_OFFSET = 20;
     private static final int Y_OFFSET = 20;
-    private List<Tile> matches;
-    private final int tileHeight;
+    private final int TILE_HEIGHT;
     private final int TILE_WIDTH;
     private final int ROW_HEIGHT;
     private final int rowOffset;
-    private final int boardWidth;
-    private final int boardHeight;
+    private final int VISUAL_WIDTH;
+    private final int VISUAL_HEIGHT;
 
 
     public PuzzleBobbleBoard(){
         super(15,14 ); //will be calculated later
-        boardHeight = 620;
-        boardWidth = 620;
-        tileHeight = 40;
+        VISUAL_HEIGHT = 620;
+        VISUAL_WIDTH = 620;
+        TILE_HEIGHT = 40;
         TILE_WIDTH = 40;
         ROW_HEIGHT = 34;
         rowOffset = 0;
@@ -36,12 +35,12 @@ public class PuzzleBobbleBoard extends Board {
         //ping me on disc bc Id like to learn, you can del afterwards- car
     }
 
-    public int getBoardWidth() {
-        return boardWidth;
+    public int getVisualWidth() {
+        return VISUAL_WIDTH;
     }
 
-    public int getBoardHeight() {
-        return boardHeight;
+    public int getVisualHeight() {
+        return VISUAL_HEIGHT;
     }
 
     @Override

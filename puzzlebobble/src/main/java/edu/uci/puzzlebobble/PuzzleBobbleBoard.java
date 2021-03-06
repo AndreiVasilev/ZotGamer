@@ -20,7 +20,7 @@ public class PuzzleBobbleBoard extends Board {
     private final int rowOffset;
     private final int VISUAL_WIDTH;
     private final int VISUAL_HEIGHT;
-
+    private PuzzleBobbleTile currentShotTile;
 
     public PuzzleBobbleBoard(){
         super(15,14 ); //will be calculated later
@@ -61,15 +61,34 @@ public class PuzzleBobbleBoard extends Board {
 
     @Override
     public void removeMatches() {
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < height; col++) {
+        final List<PuzzleBobbleTile> matchingTiles = this.findGroups(this.currentShotTile);
 
-            }
+        if (matchingTiles.size() > 2) {
+            this.setTilesToEmpty(matchingTiles);
         }
+
+        final List<PuzzleBobbleTile> floatingTiles = this.findFloatingTiles();
+        this.setTilesToEmpty(floatingTiles);
+
+        // updateScore(List, "flaoting") + calcScore("matching") {
+        //           this.score  +=  list.size() *
+        //
+        // }
     }
 
     @Override
     public boolean isGameOver() {
+        // true - if entire board is .type -1 [y,x]
+        /*
+        *   for row in < height ++
+        *      for col in < width ++
+        *              row, col
+        *
+        * */
+
+        // this.height - 1 == last row index
+        // if theres anything in that ^ last row that is not -1 , then return true
+
         return false;
     }
 
@@ -214,6 +233,8 @@ public class PuzzleBobbleBoard extends Board {
     }
 
     public boolean isCollided(final PuzzleBobbleTile shotTile) {
+        this.currentShotTile = shotTile;
+
         final Collection<PuzzleBobbleTile> tiles = getTiles();
         for (final PuzzleBobbleTile tile : tiles) {
             if (tile.getType() < 0) {
@@ -221,7 +242,7 @@ public class PuzzleBobbleBoard extends Board {
             }
 
             if (intersecting(tile, shotTile)) {
-                snapTile(shotTile);
+                    snapTile(shotTile);
                 return true;
             }
         }

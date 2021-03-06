@@ -50,7 +50,6 @@ public class TileShootingAnimation extends AnimationTimer {
       board.removeMatches();
       stop();
       stopped.set(true);
-      // is Game Over ??
     }
   }
 

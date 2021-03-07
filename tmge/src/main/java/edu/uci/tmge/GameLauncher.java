@@ -1,6 +1,6 @@
 package edu.uci.tmge;
 
-import edu.uci.tmge.core.MultiplayerGame;
+import edu.uci.tmge.core.GameManager;
 import edu.uci.tmge.core.PlayerManager;
 
 import java.util.HashMap;
@@ -28,18 +28,18 @@ public class GameLauncher {
         if (gameFactories.containsKey(name)) {
             final GameWindowFactory windowFactory = gameWindowFactories.get(name);
             final GameFactory gameFactory = gameFactories.get(name);
-            final MultiplayerGame multiplayerGame = new MultiplayerGame();
+            final GameManager gameManager = new GameManager();
 
             for (final String player : players) {
                 final Game game = gameFactory.create(player);
                 final GameWindow gameWindow = windowFactory.create(game);
-                multiplayerGame.addGame(game, gameWindow);
+                gameManager.addGame(game, gameWindow);
             }
 
-            multiplayerGame.launch();
+            gameManager.launch();
 
-            multiplayerGame.addAction(GameEvent.GAME_END, () -> {
-                final List<Game> games = multiplayerGame.getGames();
+            gameManager.addAction(GameEvent.GAME_END, () -> {
+                final List<Game> games = gameManager.getGames();
                 for (final Game game : games) {
                     final String player = game.getPlayerName();
                     final double score = game.getScore();

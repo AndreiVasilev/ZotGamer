@@ -4,14 +4,14 @@ import edu.uci.tmge.*;
 
 import java.util.*;
 
-public class MultiplayerGame implements Pausable, Actionable {
+public class GameManager implements Pausable, Actionable {
 
     private final Map<GameEvent, List<Runnable>> eventActions;
     private final List<GameWindow> gameWindows;
     private final List<Game> games;
     private int currentPlayer;
 
-    public MultiplayerGame(){
+    public GameManager(){
         eventActions = new HashMap<>();
         gameWindows = new ArrayList<>();
         games = new ArrayList<>();

@@ -21,7 +21,7 @@ public class PuzzleBobbleBoard extends Board {
     private PuzzleBobbleTile currentShotTile;
 
     public PuzzleBobbleBoard(){
-        super(15,14 );
+        super(15, 15);
         VISUAL_HEIGHT = 620;
         VISUAL_WIDTH = 620;
         TILE_DIAMETER = 40;

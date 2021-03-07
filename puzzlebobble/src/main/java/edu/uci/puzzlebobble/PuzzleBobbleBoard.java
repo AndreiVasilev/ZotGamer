@@ -240,7 +240,6 @@ public class PuzzleBobbleBoard extends Board {
         return false;
     }
 
-    // TODO check to see not snapping onto non-empty tile
     private void snapTile(PuzzleBobbleTile shotTile) {
         final double adjustedX = shotTile.getVisualX() + shotTile.getRadius();
         final double adjustedY = shotTile.getVisualY() + shotTile.getRadius();

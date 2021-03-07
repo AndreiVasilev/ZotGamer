@@ -62,23 +62,23 @@ public class PuzzleBobbleBoard extends Board {
         final List<PuzzleBobbleTile> matchingTiles = this.findGroups(this.currentShotTile);
 
         if (matchingTiles.size() > 2) {
-            this.setTilesToEmpty(matchingTiles);
+            setTilesToEmpty(matchingTiles);
+            updateScore(matchingTiles, false);
+
+            final List<PuzzleBobbleTile> floatingTiles = this.findFloatingTiles();
+            setTilesToEmpty(floatingTiles);
+            updateScore(floatingTiles, true);
         }
-
-        final List<PuzzleBobbleTile> floatingTiles = this.findFloatingTiles();
-        this.setTilesToEmpty(floatingTiles);
-
-        updateScore(matchingTiles, "matching");
-        updateScore(floatingTiles, "floating");
     }
 
-    public void updateScore(List<PuzzleBobbleTile> targetTiles, String category){
-        if (category == "floating"){
+    public void updateScore(List<PuzzleBobbleTile> targetTiles, boolean floating){
+        if (floating){
             int floatAmount  = targetTiles.size();
             this.score += 20 * Math.pow(2, floatAmount -1);
         }
-        else if (category == "matching")
+        else {
             this.score += (targetTiles.size() * 10);
+        }
     }
 
     @Override
@@ -99,8 +99,10 @@ public class PuzzleBobbleBoard extends Board {
         //check last row to see if there is any element placed
         for (int col = 0; col < width; col++){
             //height -1 is last row index
-            if (tiles.get((this.height-1)).get(col).getType() != -1)
+            if (tiles.get((this.height - 1)).get(col).getType() != -1) {
                 outOfBounds = true;
+                break;
+            }
         }
 
         return isEmpty || outOfBounds;

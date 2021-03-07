@@ -68,26 +68,42 @@ public class PuzzleBobbleBoard extends Board {
         final List<PuzzleBobbleTile> floatingTiles = this.findFloatingTiles();
         this.setTilesToEmpty(floatingTiles);
 
-        // updateScore(List, "flaoting") + calcScore("matching") {
-        //           this.score  +=  list.size() *
-        //
-        // }
+        updateScore(matchingTiles, "matching");
+        updateScore(floatingTiles, "floating");
+    }
+
+    public void updateScore(List<PuzzleBobbleTile> targetTiles, String category){
+        if (category == "floating"){
+            int floatAmount  = targetTiles.size();
+            this.score += 20 * Math.pow(2, floatAmount -1);
+        }
+        else if (category == "matching")
+            this.score += (targetTiles.size() * 10);
     }
 
     @Override
     public boolean isGameOver() {
-        // true - if entire board is .type -1 [y,x]
-        /*
-        *   for row in < height ++
-        *      for col in < width ++
-        *              row, col
-        *
-        * */
+        boolean isEmpty = true;
+        boolean outOfBounds = false;
+        outerloop:
+        //check for all empty tiles
+        for (int row = 0; row < height; row ++){
+            for (int col = 0; col < width; col++){
+                //if there a single tile that is not blank, the game is not over
+                if (tiles.get(row).get(col).getType() != -1){
+                    isEmpty = false;
+                    break outerloop;
+                }
+            }
+        }
+        //check last row to see if there is any element placed
+        for (int col = 0; col < width; col++){
+            //height -1 is last row index
+            if (tiles.get((this.height-1)).get(col).getType() != -1)
+                outOfBounds = true;
+        }
 
-        // this.height - 1 == last row index
-        // if theres anything in that ^ last row that is not -1 , then return true
-
-        return false;
+        return isEmpty || outOfBounds;
     }
 
     public Collection<PuzzleBobbleTile> getTiles() {

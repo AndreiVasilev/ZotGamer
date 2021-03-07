@@ -37,6 +37,10 @@ public class PuzzleBobbleBoard extends Board {
         return VISUAL_HEIGHT;
     }
 
+    public PuzzleBobbleTile getRandomTile() {
+        return new PuzzleBobbleTile((int) (Math.random() * 7));
+    }
+
     @Override
     public void initialize() {
         for (int row = 0; row < height; row++) {

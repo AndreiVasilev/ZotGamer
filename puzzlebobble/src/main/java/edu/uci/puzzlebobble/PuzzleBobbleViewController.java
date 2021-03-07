@@ -76,8 +76,8 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
     }
 
     private void initializeShooter() {
-        currentTile = new PuzzleBobbleTile((int) (Math.random() * 7));
-        nextTile = new PuzzleBobbleTile((int) (Math.random() * 7));
+        currentTile = board.getRandomTile();
+        nextTile = board.getRandomTile();
         tilePane.getChildren().addAll(currentTile.getVisualTile(), nextTile.getVisualTile());
 
         // Position of tiles must be set AFTER they are added to UI canvas
@@ -121,7 +121,7 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
         currentTile = nextTile;
         currentTile.setVisualX(SHOOT_TILE_START_X);
         currentTile.setVisualY(SHOOT_TILE_START_Y);
-        nextTile = new PuzzleBobbleTile((int) (Math.random() * 7));
+        nextTile = board.getRandomTile();
         tilePane.getChildren().add(nextTile.getVisualTile());
         nextTile.setVisualX(NEXT_TILE_X);
         nextTile.setVisualY(NEXT_TILE_Y);

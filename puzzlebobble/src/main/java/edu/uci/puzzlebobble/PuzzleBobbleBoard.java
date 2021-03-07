@@ -251,16 +251,47 @@ public class PuzzleBobbleBoard extends Board {
         return false;
     }
 
+    private boolean isEmpty(int row, int col){
+        return this.tiles.get(row).get(col).getType() == -1;
+    }
+
     // TODO check to see not snapping onto non-empty tile
     public void snapTile(PuzzleBobbleTile shotTile) {
         final double adjustedX = shotTile.getVisualX() + TILE_WIDTH / 2.0;
         final double adjustedY = shotTile.getVisualY() + TILE_WIDTH / 2.0;
         int row = getYGridPosition(adjustedY);
         int col = getXGridPosition(adjustedX, adjustedY);
+
+        // adjust Row & Col Based On Borders, ensure idx are valid positions
+        if (row >= this.width){
+            row = this.width - 1;
+        }
+        if (row < 0){
+            row = 0;
+        }
+        if (col >= this.height){
+            col = this.height - 1;
+        }
+        if (col < 0){
+            col = 0;
+        }
+
+        // if current destination slot is NOT empty, search for a lower row with empty column
+        if (!isEmpty(row,col)) {
+            // Tile is not empty, shift the new tile downwards
+            for (int lowerRow = row+1; lowerRow<this.height; lowerRow++) {
+                if ( isEmpty(lowerRow, col) ) {
+                    row = lowerRow;
+                    break;
+                }
+            }
+        }
+
         shotTile.setVisualX(getXTileCoordinates(col, row));
         shotTile.setVisualY(getYTileCoordinates(row));
         shotTile.setX(col);
         shotTile.setY(row);
+
         this.tiles.get(row).set(col, shotTile);
     }
 

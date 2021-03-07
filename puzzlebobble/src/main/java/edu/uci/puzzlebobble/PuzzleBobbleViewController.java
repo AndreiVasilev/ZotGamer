@@ -110,6 +110,7 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
                     isShooting = false;
                     swapTiles();
                     turnOver.set(true);
+                    score.setText(Integer.toString((int) board.getScore()));
                 });
                 isShooting = true;
             }

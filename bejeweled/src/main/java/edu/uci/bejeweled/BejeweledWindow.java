@@ -29,6 +29,11 @@ public class BejeweledWindow implements GameWindow {
   }
 
   @Override
+  public boolean isShowing() {
+    return gameWindow.isShowing();
+  }
+
+  @Override
   public double getScreenX() {
     return gameWindow.getX();
   }

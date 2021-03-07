@@ -10,14 +10,12 @@ public class MultiplayerGame implements Pausable, Actionable {
     private final List<GameWindow> gameWindows;
     private final List<Game> games;
     private int currentPlayer;
-    private boolean quit;
 
     public MultiplayerGame(){
         eventActions = new HashMap<>();
         gameWindows = new ArrayList<>();
         games = new ArrayList<>();
         currentPlayer = 0;
-        quit = false;
     }
 
     public void addGame(Game game, GameWindow gameWindow){
@@ -67,15 +65,29 @@ public class MultiplayerGame implements Pausable, Actionable {
             }
         }
 
+        for (final GameWindow window : gameWindows) {
+            if (window.isShowing()) {
+                window.close();
+            }
+        }
+
         if (games.stream().allMatch(Game::isOver)) {
             eventActions.getOrDefault(GameEvent.GAME_END, Collections.emptyList()).forEach(Runnable::run);
         }
     }
 
     public void switchPlayers(){
-        games.get(currentPlayer).pause();
-        currentPlayer = (currentPlayer + 1) % games.size();
-        games.get(currentPlayer).resume();
+        int playersChecked = 0;
+        while (playersChecked != games.size()) {
+            final int nextPlayer = getNextPlayer();
+            ++playersChecked;
+            if (!games.get(nextPlayer).isOver()) {
+                games.get(currentPlayer).pause();
+                currentPlayer = nextPlayer;
+                games.get(currentPlayer).resume();
+                break;
+            }
+        }
     }
 
     @Override
@@ -89,5 +101,9 @@ public class MultiplayerGame implements Pausable, Actionable {
         if (eventActions.containsKey(event)) {
             eventActions.get(event).remove(action);
         }
+    }
+
+    private int getNextPlayer() {
+        return (currentPlayer + 1) % games.size();
     }
 }

@@ -21,7 +21,7 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="score" layoutX="655.0" text="1500" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="500.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="score" layoutX="655.0" text="0" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="500.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -46,6 +46,20 @@
             <Label fx:id="gamePauseMessage" alignment="CENTER" text="Other Player's Turn" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="35.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="gameOverScreen" opacity="0.8" style="-fx-background-color: #222;" visible="false">
+         <children>
+            <Label alignment="CENTER" prefHeight="515.0" prefWidth="620.0" text="Game Over" textFill="WHITE" AnchorPane.bottomAnchor="115.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </Label>
+            <Label fx:id="finalScore" alignment="CENTER" layoutX="227.0" layoutY="346.0" text="Final Score" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="28.0" />
                </font>
             </Label>
          </children>

@@ -5,7 +5,7 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import java.util.ArrayList; //TODO: Can be deleted later if not need to iterate over matching tiles
+import java.util.List;
 
 public class TileShootingAnimation extends AnimationTimer {
 
@@ -35,28 +35,18 @@ public class TileShootingAnimation extends AnimationTimer {
     tile.setVisualX(tile.getVisualX() + deltaX);
     tile.setVisualY(tile.getVisualY() + deltaY);
 
-    // TODO use board dimensions for checking collisions with edges
     if (tile.getVisualX() - tile.getRadius() <= 0.0 ||
-        tile.getVisualX() + tile.getRadius() >= board.getBoardWidth())
+        tile.getVisualX() + tile.getRadius() >= board.getVisualWidth())
     {
       angle = -angle - Math.PI;
       deltaX = getDeltaX();
       deltaY = getDeltaY();
     }
 
-    // TODO check for collisions with other tiles, not just top of board
     if (board.isCollided(tile)) {
+      board.removeMatches();
       stop();
       stopped.set(true);
-
-      System.out.println("New Move Done. Bobble Snapped Into: " + "("+tile.getY()+","+tile.getX()+")" );
-
-      ArrayList<PuzzleBobbleTile> matchingTiles = board.findGroups(tile);
-
-      for (PuzzleBobbleTile t : matchingTiles){
-        System.out.println("("+t.getY() + "," + t.getX() + ")");
-      }
-
     }
   }
 

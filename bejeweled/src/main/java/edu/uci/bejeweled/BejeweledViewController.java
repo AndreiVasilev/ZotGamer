@@ -17,16 +17,18 @@ import java.util.Collection;
 
 public class BejeweledViewController extends StackPane implements Pausable {
 
-  @FXML private HBox gameFrame;
+  @FXML private AnchorPane gameOverScreen;
   @FXML private AnchorPane pauseScreen;
+  @FXML private HBox gameFrame;
   @FXML private GridPane tileGrid;
   @FXML private Label playerLabel;
   @FXML private Label scoreLabel;
-  private final BejeweledBoard bejeweledBoard;
+  @FXML private Label finalScore;
+  private final BejeweledBoard board;
   private final BooleanProperty turnOver;
   private final BooleanProperty gameOver;
 
-  public BejeweledViewController(final BejeweledBoard bejeweledBoard, final String playerName) {
+  public BejeweledViewController(final BejeweledBoard board, final String playerName) {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/BejeweledView.fxml"));
     fxmlLoader.setRoot(this);
     fxmlLoader.setController(this);
@@ -36,7 +38,7 @@ public class BejeweledViewController extends StackPane implements Pausable {
       throw new RuntimeException(exception);
     }
 
-    this.bejeweledBoard = bejeweledBoard;
+    this.board = board;
     turnOver = new SimpleBooleanProperty(false);
     gameOver = new SimpleBooleanProperty(false);
     playerLabel.setText("Player - " + playerName);
@@ -45,13 +47,13 @@ public class BejeweledViewController extends StackPane implements Pausable {
   public void initializeView() {
     tileGrid.getRowConstraints().clear();
     tileGrid.getColumnConstraints().clear();
-    scoreLabel.setText(Integer.toString((int)bejeweledBoard.getScore()));
-    for (int i = 0; i < bejeweledBoard.getHeight(); ++i) {
+    scoreLabel.setText(Integer.toString((int) board.getScore()));
+    for (int i = 0; i < board.getHeight(); ++i) {
       final RowConstraints row = new RowConstraints(65);
       tileGrid.getRowConstraints().add(row);
     }
 
-    for (int i = 0; i < bejeweledBoard.getWidth(); ++i) {
+    for (int i = 0; i < board.getWidth(); ++i) {
       final ColumnConstraints col = new ColumnConstraints(65);
       tileGrid.getColumnConstraints().add(col);
     }
@@ -70,7 +72,7 @@ public class BejeweledViewController extends StackPane implements Pausable {
   private void drawTileGrid() {
     tileGrid.getChildren().clear();
 
-    final Collection<BejeweledTile> tiles = bejeweledBoard.getTiles();
+    final Collection<BejeweledTile> tiles = board.getTiles();
     for (final BejeweledTile tile : tiles) {
       tile.getVisualTile().setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
@@ -80,28 +82,35 @@ public class BejeweledViewController extends StackPane implements Pausable {
 
             @Override
             public void handle(long now) {
-              if(bejeweledBoard.hasMatches()) {
-                bejeweledBoard.postMoveUpdate();
+              if(board.hasMatches()) {
+                board.postMoveUpdate();
                 drawTileGrid();
               } else {
                 stop();
+
+                if (board.isGameOver()) {
+                  gameOverScreen.setVisible(true);
+                  gameFrame.setDisable(true);
+                  gameOver.set(true);
+                  finalScore.setText("Final Score : " + (int) board.getScore());
+                }
+
                 turnOver.set(true);
-                bejeweledBoard.resetSelectedTile();
-                scoreLabel.setText(Integer.toString((int)bejeweledBoard.getScore()));
+                board.resetSelectedTile();
+                scoreLabel.setText(Integer.toString((int) board.getScore()));
               }
             }
           };
 
-          if (bejeweledBoard.getSelectedTile().isPresent()) {
-            bejeweledBoard.handleSwap(tile);
-
-            animationTimer.start();
+          if (board.getSelectedTile().isPresent()) {
+            if (board.successfulSwap(tile)) {
+              animationTimer.start();
+            }
+            board.resetSelectedTile();
             return;
-
           }
 
-          bejeweledBoard.resetSelectedTile();
-          bejeweledBoard.selectTile(tile);
+          board.selectTile(tile);
         }
       });
       tileGrid.add(tile.getVisualTile(), tile.getX(), tile.getY());

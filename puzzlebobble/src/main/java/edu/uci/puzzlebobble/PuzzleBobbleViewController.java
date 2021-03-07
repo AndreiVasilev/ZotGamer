@@ -103,7 +103,7 @@ public class PuzzleBobbleViewController extends StackPane implements Pausable {
                     if (board.isGameOver()) {
                         gameOverScreen.setVisible(true);
                         tilePane.setDisable(true);
-                        finalScore.setText("Final Score : " + board.getScore());
+                        finalScore.setText("Final Score : " + (int) board.getScore());
                         gameOver.set(true);
                     }
 

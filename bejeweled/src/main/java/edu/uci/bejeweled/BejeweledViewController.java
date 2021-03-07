@@ -17,11 +17,13 @@ import java.util.Collection;
 
 public class BejeweledViewController extends StackPane implements Pausable {
 
-  @FXML private HBox gameFrame;
+  @FXML private AnchorPane gameOverScreen;
   @FXML private AnchorPane pauseScreen;
+  @FXML private HBox gameFrame;
   @FXML private GridPane tileGrid;
   @FXML private Label playerLabel;
   @FXML private Label scoreLabel;
+  @FXML private Label finalScore;
   private final BejeweledBoard board;
   private final BooleanProperty turnOver;
   private final BooleanProperty gameOver;
@@ -85,6 +87,14 @@ public class BejeweledViewController extends StackPane implements Pausable {
                 drawTileGrid();
               } else {
                 stop();
+
+                if (board.isGameOver()) {
+                  gameOverScreen.setVisible(true);
+                  gameFrame.setDisable(true);
+                  gameOver.set(true);
+                  finalScore.setText("Final Score : " + (int) board.getScore());
+                }
+
                 turnOver.set(true);
                 board.resetSelectedTile();
                 scoreLabel.setText(Integer.toString((int) board.getScore()));

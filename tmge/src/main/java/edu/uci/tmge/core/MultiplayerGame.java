@@ -77,16 +77,16 @@ public class MultiplayerGame implements Pausable, Actionable {
     }
 
     public void switchPlayers(){
-        final int player = currentPlayer;
-        games.get(currentPlayer).pause();
-        currentPlayer = getNextPlayer();
-
-        while (currentPlayer != player) {
-            if (!games.get(currentPlayer).isOver()) {
+        int playersChecked = 0;
+        while (playersChecked != games.size()) {
+            final int nextPlayer = getNextPlayer();
+            ++playersChecked;
+            if (!games.get(nextPlayer).isOver()) {
+                games.get(currentPlayer).pause();
+                currentPlayer = nextPlayer;
                 games.get(currentPlayer).resume();
                 break;
             }
-            currentPlayer = getNextPlayer();
         }
     }
 

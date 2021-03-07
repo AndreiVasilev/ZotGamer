@@ -54,30 +54,20 @@ public class PuzzleBobbleBoard extends Board {
 
     @Override
     public boolean hasMatches() {
-        return false;
+        return findGroups(currentShotTile).size() > 2;
     }
 
     @Override
     public void removeMatches() {
-        final List<PuzzleBobbleTile> matchingTiles = this.findGroups(this.currentShotTile);
+        final List<PuzzleBobbleTile> matchingTiles = findGroups(currentShotTile);
 
         if (matchingTiles.size() > 2) {
             setTilesToEmpty(matchingTiles);
             updateScore(matchingTiles, false);
 
-            final List<PuzzleBobbleTile> floatingTiles = this.findFloatingTiles();
+            final List<PuzzleBobbleTile> floatingTiles = findFloatingTiles();
             setTilesToEmpty(floatingTiles);
             updateScore(floatingTiles, true);
-        }
-    }
-
-    public void updateScore(List<PuzzleBobbleTile> targetTiles, boolean floating){
-        if (floating){
-            int floatAmount  = targetTiles.size();
-            this.score += 20 * Math.pow(2, floatAmount -1);
-        }
-        else {
-            this.score += (targetTiles.size() * 10);
         }
     }
 
@@ -112,6 +102,16 @@ public class PuzzleBobbleBoard extends Board {
         return tiles.stream().flatMap(Collection::stream)
             .map(tile -> (PuzzleBobbleTile)tile)
             .collect(Collectors.toList());
+    }
+
+    private void updateScore(List<PuzzleBobbleTile> targetTiles, boolean floating){
+        if (floating){
+            int floatAmount  = targetTiles.size();
+            this.score += 20 * Math.pow(2, floatAmount -1);
+        }
+        else {
+            this.score += (targetTiles.size() * 10);
+        }
     }
 
     private void setTilesToEmpty(List<PuzzleBobbleTile> arrOfTiles){
@@ -246,7 +246,7 @@ public class PuzzleBobbleBoard extends Board {
     }
 
     public boolean isCollided(final PuzzleBobbleTile shotTile) {
-        this.currentShotTile = shotTile;
+        currentShotTile = shotTile;
 
         final Collection<PuzzleBobbleTile> tiles = getTiles();
         for (final PuzzleBobbleTile tile : tiles) {

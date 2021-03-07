@@ -93,12 +93,13 @@ public class BejeweledViewController extends StackPane implements Pausable {
           };
 
           if (board.getSelectedTile().isPresent()) {
-            board.handleSwap(tile);
-            animationTimer.start();
+            if (board.successfulSwap(tile)) {
+              animationTimer.start();
+            }
+            board.resetSelectedTile();
             return;
           }
 
-          board.resetSelectedTile();
           board.selectTile(tile);
         }
       });

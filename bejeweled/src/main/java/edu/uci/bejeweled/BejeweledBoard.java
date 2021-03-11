@@ -256,6 +256,10 @@ public class BejeweledBoard extends Board {
                     swapTiles(tile, tiles.get(row+1).get(col)); // swap back
                     return true;
                 }
+                else {
+                    tile = tiles.get(row).get(col);
+                    swapTiles(tile, tiles.get(row+1).get(col)); //swap back
+                }
 
                 tile = tiles.get(row).get(col);
                 swapTiles(tile, tiles.get(row).get(col+1));
@@ -263,6 +267,10 @@ public class BejeweledBoard extends Board {
                     tile = tiles.get(row).get(col);
                     swapTiles(tile, tiles.get(row).get(col+1)); // swap back
                     return true;
+                }
+                else {
+                    tile = tiles.get(row).get(col);
+                    swapTiles(tile, tiles.get(row).get(col+1)); // swap back
                 }
 
             }

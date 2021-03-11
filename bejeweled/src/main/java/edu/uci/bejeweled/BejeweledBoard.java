@@ -9,11 +9,8 @@ import java.util.stream.Collectors;
 public class BejeweledBoard extends Board {
 
     private BejeweledTile selectedTile;
-
-    //false if board not initialized, true if game has started
-    private boolean gameState =  false;
-
     private BejeweledGameState state = BejeweledGameState.REMOVE_TILE;
+    private boolean gameStarted =  false;
     private int counter = 0;
 
     public BejeweledBoard(){
@@ -23,8 +20,8 @@ public class BejeweledBoard extends Board {
 
     public Collection<BejeweledTile> getTiles() {
         return tiles.stream().flatMap(Collection::stream)
-            .map(tile -> (BejeweledTile)tile)
-            .collect(Collectors.toList());
+                .map(tile -> (BejeweledTile)tile)
+                .collect(Collectors.toList());
     }
 
     public Optional<BejeweledTile> getSelectedTile() {
@@ -43,14 +40,18 @@ public class BejeweledBoard extends Board {
         selectedTile = null;
     }
 
-    public void handleSwap(Tile tile) {
-        if (canSwap(selectedTile, tile)) {
-            swapTiles(selectedTile, tile);
+    public boolean successfulSwap(Tile tile) {
+        if (!canSwap(selectedTile, tile)) {
+            return false;
         }
 
+        swapTiles(selectedTile, tile);
         if (!hasMatches()) {
             swapTiles(selectedTile, tile);
+            return false;
         }
+
+        return true;
     }
 
     public void postMoveUpdate() {
@@ -83,10 +84,29 @@ public class BejeweledBoard extends Board {
         }
 
         setupBoard();
-        this.gameState = true;
+        this.gameStarted = true;
     }
 
-    public List<Map<String, Integer>> findMatches() {
+    @Override
+    public boolean hasMatches() {
+        return !findMatches().isEmpty();
+    }
+
+    @Override
+    public void removeMatches() {
+        while(hasMatches()) {
+            removeTiles();
+            shiftTiles();
+            fillEmptyTiles();
+        }
+    }
+
+    @Override
+    public boolean isGameOver() {
+        return !hasValidMoves();
+    }
+
+    private List<Map<String, Integer>> findMatches() {
         List<Map<String, Integer>> matches = new ArrayList<>();
         int totalMatches = 0;
         //horizontal
@@ -154,13 +174,7 @@ public class BejeweledBoard extends Board {
         return matches;
     }
 
-    @Override
-    public boolean hasMatches() {
-        List<Map<String, Integer>> matches = findMatches();
-        return !matches.isEmpty();
-    }
-
-    public double calculateScore(List<Map<String, Integer>> matches){
+    private double calculateScore(List<Map<String, Integer>> matches){
         double score = 0;
         for (final Map<String, Integer> match : matches){
             score += 100*(match.get("length")-2);
@@ -168,20 +182,9 @@ public class BejeweledBoard extends Board {
         return score;
     }
 
-    //TODO: finish removeMatches
-    @Override
-    public void removeMatches() {
-        while(hasMatches()) {
-            removeTiles();
-            shiftTiles();
-            fillEmptyTiles();
-        }
-    }
-
-    //Finds all matches in the board and sets it to 0
-    public void removeTiles() {
+    private void removeTiles() {
         List<Map<String, Integer>> matches = findMatches();
-        if(gameState){
+        if(gameStarted){
             this.setScore(this.getScore()+calculateScore(matches));
         }
         for (final Map<String, Integer> match : matches) {
@@ -201,12 +204,7 @@ public class BejeweledBoard extends Board {
     }
 
 
-    @Override
-    public boolean isGameOver() {
-        return !hasValidMoves();
-    }
-
-    public void fillEmptyTiles() {
+    private void fillEmptyTiles() {
         for(final List<Tile> row : tiles) {
             for(final Tile tile : row) {
                 if(tile.getType() == 0) {
@@ -216,7 +214,7 @@ public class BejeweledBoard extends Board {
         }
     }
 
-    public void shiftTiles() {
+    private void shiftTiles() {
         List<Map<String, Integer>> matches = findMatches();
         for (final Map<String, Integer> match : matches) {
             int matchLen = match.get("length");
@@ -247,7 +245,7 @@ public class BejeweledBoard extends Board {
     }
 
     //find moves
-    public boolean hasValidMoves() {
+    private boolean hasValidMoves() {
         Tile tile;
         for (int row = 0; row < height-1; row++) {
             for (int col = 0; col < width-1; col++) {
@@ -258,6 +256,10 @@ public class BejeweledBoard extends Board {
                     swapTiles(tile, tiles.get(row+1).get(col)); // swap back
                     return true;
                 }
+                else {
+                    tile = tiles.get(row).get(col);
+                    swapTiles(tile, tiles.get(row+1).get(col)); // swap back
+                }
 
                 tile = tiles.get(row).get(col);
                 swapTiles(tile, tiles.get(row).get(col+1));
@@ -266,40 +268,30 @@ public class BejeweledBoard extends Board {
                     swapTiles(tile, tiles.get(row).get(col+1)); // swap back
                     return true;
                 }
+                else {
+                    tile = tiles.get(row).get(col);
+                    swapTiles(tile, tiles.get(row).get(col+1)); // swap back
+                }
 
             }
         }
         return false;
     }
 
-    public boolean canSwap(final Tile tile1, final Tile tile2) {
+    private boolean canSwap(final Tile tile1, final Tile tile2) {
         final int xDiff = Math.abs(tile1.getX() - tile2.getX());
         final int yDiff = Math.abs(tile1.getY() - tile2.getY());
         return (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1);
     }
 
-    public void swapTiles(final Tile tile1, final Tile tile2) {
+    private void swapTiles(final Tile tile1, final Tile tile2) {
         if ((tile2.getX() == width) || (tile2.getY() == height)) {
             return;
         }
 
-        // save both tile coordinates
-        int tile1X = tile1.getX();
-        int tile1Y = tile1.getY();
-        int tile2X = tile2.getX();
-        int tile2Y = tile2.getY();
-
-        // set initially selected tile coords to be swap tile coords
-        tile1.setX(tile2X);
-        tile1.setY(tile2Y);
-
-        // set swap tile coords to be initially selected tile coords
-        tile2.setX(tile1X);
-        tile2.setY(tile1Y);
-
-        // swap tile locations on the board
-        tiles.get(tile1Y).set(tile1X, tile2);
-        tiles.get(tile2Y).set(tile2X, tile1);
+        final int type2 = tile2.getType();
+        tile2.setType(tile1.getType());
+        tile1.setType(type2);
     }
 
     private void setupBoard() {
